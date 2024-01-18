@@ -1,4 +1,4 @@
-# GPT Documents
+# Basic GPT Documents
 
 Welcome to GPT Documents, a basic OpenAI document chatbot powered by llama index and chainlit. This project serves as a foundation, and we plan to enhance its capabilities in subsequent iterations.
 
