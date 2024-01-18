@@ -22,7 +22,7 @@ Follow these steps to set up the GPT Documents chatbot on your local machine:
 
 3. Load your documents into the vector store by placing them in the 'data' folder and running the 'ingest.py' program.
 
-**Note**: Create an .env file and add your OpenAI API key as `'OPENAI_API_KEY="sk-..."`
+**Note**: Create an .env file and add your OpenAI API key as `OPENAI_API_KEY="sk-..."`
 
 ## Usage
 
