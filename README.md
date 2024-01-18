@@ -3,6 +3,7 @@
 Welcome to GPT Documents, a basic OpenAI document chatbot powered by llama index and chainlit. This project serves as a foundation, and we plan to enhance its capabilities in subsequent iterations.
 
 ![Alt Text](images/ChainlitRAG.png)
+
 ## Installation Instructions
 
 Follow these steps to set up the GPT Documents chatbot on your local machine:
@@ -20,6 +21,8 @@ Follow these steps to set up the GPT Documents chatbot on your local machine:
    ```
 
 3. Load your documents into the vector store by placing them in the 'data' folder and running the 'ingest.py' program.
+
+**Note**: Add your OpenAI API key to the .env file as OPENAI_API_KEY="sk-..."
 
 ## Usage
 
