@@ -3,4 +3,5 @@
 **/storage/
 *.gitattributes
 **/data/*
+!**/data/
 3.HybridRetriever
