@@ -53,7 +53,7 @@ async def main(message: cl.Message):
     message_history = cl.user_session.get("message_history")
     prompt_template = "Previous messages:\n"
 
-    msg = cl.Message(content="", author="Assistant")
+    response_message = cl.Message(content="", author="Assistant")
 
     user_message = message.content
 
@@ -61,17 +61,36 @@ async def main(message: cl.Message):
         prompt_template += f"{message['author']}: {message['content']}\n"
     prompt_template += f"Human: {user_message}"
 
-    res = await cl.make_async(query_engine.query)(prompt_template)
+    response = await cl.make_async(query_engine.query)(prompt_template)
 
-    for token in res.response_gen:
-        await msg.stream_token(token)
-    if res.response_txt:
-        msg.content = res.response_txt
-    await msg.send()
+    for token in response.response_gen:
+        await response_message.stream_token(token)
+    if response.response_txt:
+        response_message.content = response.response_txt
+    await response_message.send()
 
     message_history.append({"author": "Human", "content": user_message})
-    message_history.append({"author": "AI", "content": msg.content})
+    message_history.append({"author": "AI", "content": response_message.content})
     message_history = message_history[
         -6:
     ]  # This keeps only the last 3 pairs of messages
     cl.user_session.set("MESSAGE_HISTORY", message_history)
+
+    label_list = []
+    count = 1
+
+    for sr in response.source_nodes:
+        elements = [
+            cl.Text(
+                name="S" + str(count),
+                content=f"{sr.node.text}",
+                display="side",
+                size="small",
+            )
+        ]
+        response_message.elements = elements
+        label_list.append("S" + str(count))
+        await response_message.update()
+        count += 1
+    response_message.content += "\n\nSources: " + ", ".join(label_list)
+    await response_message.update()

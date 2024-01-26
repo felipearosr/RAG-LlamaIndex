@@ -4,4 +4,6 @@
 *.gitattributes
 **/data/*
 !**/data/
-3.HybridRetriever
+5.Sources\ Extended
+6.Pinecone
+7.HybridRetriever

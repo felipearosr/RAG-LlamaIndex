@@ -5,7 +5,7 @@ Welcome to GPT Documents, a repository hosting various chatbots powered by llama
 ![Alt Text](1.BasicDocChatbot/images/ChainlitRAG.png)
 
 ## Roadmap
-The order might change, and points may be added.
+The order might change, and points might be added.
 
 - Adding Sources
 - Adding Pinecone Pod
