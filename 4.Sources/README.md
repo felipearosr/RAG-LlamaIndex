@@ -1,8 +1,8 @@
-# Memory Limited
+# Sources
 
-As requested just added a simple line that will keep the memory limited to the last 3 pairs of user messages and llm responses. This way long conversations will expend less tokens.
+Added sources to keep track what source the llm is using to answer your queries.
 
-![Alt Text](images/ChainlitRAGMemory.png)
+![Alt Text](images/RAGSources.png)
 ## Installation Instructions
 
 Follow these steps to set up the GPT Documents chatbot on your local machine:
