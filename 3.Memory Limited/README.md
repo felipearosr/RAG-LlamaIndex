@@ -19,7 +19,10 @@ Follow these steps to set up the GPT Documents chatbot on your local machine:
    pip install -r requirements.txt
    ```
 
-3. Load your documents into the vector store by placing them in the 'data' folder and running the 'ingest.py' program.
+3. Load your documents into the vector store by: 
+    - Create a folder named 'data'.
+    - Place your documents inside the 'data' folder.
+    - Execute the 'ingest.py' script to initiate the loading process.
 
 ## Usage
 
