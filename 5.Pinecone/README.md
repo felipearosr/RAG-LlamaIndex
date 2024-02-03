@@ -4,6 +4,8 @@ Using Pinecone Vector DB, there are some new changes to both the `ingest.py` and
 
 You will also see a new IngestionPipeline and some commented extractors, you can uncomment them and use them. Each will add a expecific metadata to your vectors.
 
+Finally I changed the embedding model and the llm to "text-embedding-3-large", "gpt-4-0125-preview". If you use another embedding model, make sure you change the dimensions of the db in ingestion accordingly. For example, text-embedding-ada-002 uses 1536.
+
 ![Alt Text](images/PineconeRAG.png)
 ## Installation Instructions
 
