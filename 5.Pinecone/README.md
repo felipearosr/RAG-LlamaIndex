@@ -4,7 +4,7 @@ Using Pinecone Vector DB, there are some new changes to both the `ingest.py` and
 
 You will also see a new IngestionPipeline and some commented extractors, you can uncomment them and use them. Each will add a expecific metadata to your vectors.
 
-![Alt Text](images/RAGSources.png)
+![Alt Text](images/PineconeRAG.png)
 ## Installation Instructions
 
 Follow these steps to set up the GPT Documents chatbot on your local machine:

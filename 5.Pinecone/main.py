@@ -20,7 +20,7 @@ EMBEDDING = "text-embedding-3-large"  # "text-embedding-3-small" - OLD "text-emb
 @cl.cache
 def load_context():
     pc = Pinecone(api_key=pinecone_api_key)
-    pinecone_index = pc.Index("pinecone-index")
+    pinecone_index = pc.Index("rag-index")
     vector_store = PineconeVectorStore(
         pinecone_index=pinecone_index,
     )

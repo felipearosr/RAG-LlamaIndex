@@ -1,0 +1,26 @@
+3
+387Oceans and Coastal Ecosystems and Their Services  Chapter 3
+Frequently Asked Questions
+FAQ 3.1 | How do we know which changes to marine ecosystems are specifically caused by climate change?
+To attribute changes in marine ecosystems to human-induced climate change, scientists use paleorecords (reconstructing the links between 
+climate, evolutionary and ecological changes in the geological past), contemporary observations (assessing current climate and ecological 
+responses in the field and through experiments) and models. We refer to these as multiple lines of evidence, meaning that the evidence comes 
+from diverse approaches, as described below.
+Emissions of greenhouse gases like carbon dioxide from human activity cause ocean warming, acidification, oxygen 
+loss, and other physical and chemical changes that are affecting marine ecosystems around the world. At the same 
+time, natural climate variability and direct human impacts, such as overfishing and pollution, also affect marine 
+ecosystems locally, regionally and globally. These climate and non-climate impact drivers counteract each other, add 
+up or multiply to produce smaller or larger changes than expected from individual drivers. Attribution of changes in 
+marine ecosystems requires evaluating the often-interacting roles of natural climate variability, non-climate drivers, 
+and human-induced climate change. To do this work, scientists use
+• paleorecords: reconstructing the links between climate and evolutionary and ecological changes of the past;
+• contemporary observations: assessing current climate and ecological responses;
+• manipulation experiments: measuring responses of organisms and ecosystems to different climate conditions; and
+• models: testing whether we understand how organisms and ecosystems are impacted by different stressors, and 
+quantifying the relative importance of different stressors.
+Paleorecords can be used to trace the correlation between past changes in climate and marine life. Paleoclimate is 
+reconstructed from the chemical composition of shells and teeth or from sediments and ice cores. Changes to sea 
+life signalled by changing biodiversity, extinction or distributional shifts are reconstructed from fossils. Using large 
+datasets, we can infer the effects of climate change on sea life over relatively long time scales⎯ usually hundreds to 
+millions of years. The advantage of paleorecords is that they provide insights into how climate change affects life 
+from organisms to ecosystems, without the complicating influence of direct human impacts.
