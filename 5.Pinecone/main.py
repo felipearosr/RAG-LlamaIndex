@@ -37,7 +37,6 @@ def load_context():
     )
     return index
 
-6
 @cl.on_chat_start
 async def start():
     index = load_context()
