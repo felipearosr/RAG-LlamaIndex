@@ -38,7 +38,7 @@ num_workers = min(4, num_cores)
 pc.create_index(
     name="pinecone-index",
     dimension=3072,
-    metric="docproduct",
+    metric="dotproduct",
     spec=PodSpec(environment="gcp-starter"),
 )
 """
