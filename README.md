@@ -15,7 +15,7 @@ The order might change, and points might be added.
 - [x] Sources
 - [x] Pinecone Pod
 - [ ] Pinecone Serverless
-- [ ] Implementing HybridSearch Retriever
+- [x] Implementing HybridSearch Retriever
 - [ ] Implementing better ingestion techniques
 - [ ] Trying out agents
 - [ ] Prompting
