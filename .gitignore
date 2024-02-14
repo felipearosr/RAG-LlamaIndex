@@ -7,4 +7,7 @@
 5.Sources\ Extended
 7.HybridRetriever
 6.HybridRetrievercopy
+8.Prompting
+8.Token counter
+9.Cohere Reranker
 *.files

@@ -1,0 +1,10 @@
+llama-index
+openai
+chainlit
+pypdf
+llmsherpa
+pinecone-client
+llama-hub
+unstructured
+trulens_eval
+tiktoken
