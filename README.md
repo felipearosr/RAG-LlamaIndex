@@ -16,10 +16,12 @@ The order might change, and points might be added.
 - [x] Pinecone Pod
 - [ ] Pinecone Serverless
 - [x] Implementing HybridSearch Retriever
-- [x] Implementing better ingestion techniques
+- [x] Implementing better ingestion 
+- [ ] Add evaluation
+- [ ] Create set of documents and questions for evaluation
 - [ ] Trying out agents
 - [ ] Prompting
-- [ ] Trying out QueryConstruction
+- [ ] Trying out Query Transformations 
 - [ ] Implementing a llm router
 - [ ] Trying out GPT as a reranker and comparing it with others
 - [ ] Adding Mistral and Llama examples
