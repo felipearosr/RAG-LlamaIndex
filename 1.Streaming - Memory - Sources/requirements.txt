@@ -1,0 +1,4 @@
+llama-index==0.10.3   # Feb 16 2024
+openai==1.12.0        # Feb 16 2024
+chainlit==1.0.200     # Feb 16 2024
+pypdf==4.0.1          # Feb 16 2024

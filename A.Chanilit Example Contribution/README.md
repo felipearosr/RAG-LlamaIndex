@@ -1,8 +1,8 @@
-# Sources
+# Basic Doc ChatBot
 
-Added sources to keep track what source the llm is using to answer your queries.
+Welcome to GPT Documents, a basic OpenAI document chatbot powered by llama index and chainlit. This is the first and most basic form of a chatbot with documents.
 
-![Alt Text](images/RAGSources.png)
+![Alt Text](images/ChainlitRAG.png)
 ## Installation Instructions
 
 Follow these steps to set up the GPT Documents chatbot on your local machine:

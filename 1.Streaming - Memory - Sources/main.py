@@ -2,14 +2,9 @@ import os
 import openai
 import chainlit as cl
 
-from llama_index.llms import OpenAI
-from llama_index.text_splitter import SentenceSplitter
-from llama_index.callbacks.base import CallbackManager
-from llama_index import (
-    ServiceContext,
-    StorageContext,
-    load_index_from_storage,
-)
+from llama_index.core import Settings, load_index_from_storage, StorageContext
+from llama_index.llms.openai import OpenAI
+from llama_index.embeddings.openai import OpenAIEmbedding
 
 openai.api_key = os.environ.get("OPENAI_API_KEY")
 
@@ -27,16 +22,13 @@ def load_context():
 async def start():
     index = load_context()
 
-    service_context = ServiceContext.from_defaults(
-        llm=OpenAI(
-            temperature=0.1, model="gpt-3.5-turbo", max_tokens=1024, streaming=True
-        ),
-        text_splitter=SentenceSplitter(chunk_size=512, chunk_overlap=126),
-        callback_manager=CallbackManager([cl.LlamaIndexCallbackHandler()]),
+    Settings.llm = OpenAI(
+        model="gpt-3.5-turbo", temperature=0.1, max_tokens=1024, streaming=True
     )
-    query_engine = index.as_query_engine(
-        service_context=service_context, streaming=True, similarity_top_k=2
-    )
+    Settings.embed_model = OpenAIEmbedding(model="text-embedding-3-small")
+    Settings.context_window = 4096
+
+    query_engine = index.as_query_engine(streaming=True, similarity_top_k=2)
     cl.user_session.set("query_engine", query_engine)
 
     message_history = []
@@ -63,6 +55,7 @@ async def main(message: cl.Message):
 
     response = await cl.make_async(query_engine.query)(prompt_template)
 
+
     for token in response.response_gen:
         await response_message.stream_token(token)
     if response.response_txt:
@@ -71,9 +64,7 @@ async def main(message: cl.Message):
 
     message_history.append({"author": "Human", "content": user_message})
     message_history.append({"author": "AI", "content": response_message.content})
-    message_history = message_history[
-        -6:
-    ]  # This keeps only the last 3 pairs of messages
+    message_history = message_history[-4:]
     cl.user_session.set("MESSAGE_HISTORY", message_history)
 
     label_list = []
@@ -94,3 +85,4 @@ async def main(message: cl.Message):
         count += 1
     response_message.content += "\n\nSources: " + ", ".join(label_list)
     await response_message.update()
+
