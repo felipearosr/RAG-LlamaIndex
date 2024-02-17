@@ -2,37 +2,33 @@ import os
 import openai
 import chainlit as cl
 
-from llama_index import ServiceContext, VectorStoreIndex #, OpenAIEmbedding
-from llama_index import OpenAIEmbedding
-from llama_index.llms import OpenAI
-from llama_index.text_splitter import SentenceSplitter
-from llama_index.vector_stores import PineconeVectorStore
-from llama_index.callbacks.base import CallbackManager
+from llama_index.core import Settings, VectorStoreIndex
+from llama_index.llms.openai import OpenAI
+from llama_index.embeddings.openai import OpenAIEmbedding
+from llama_index.vector_stores.pinecone import PineconeVectorStore
 from pinecone import Pinecone
-from llama_index import set_global_service_context
 
 openai.api_key = os.environ.get("OPENAI_API_KEY")
 pinecone_api_key = os.environ.get("PINECONE_API_KEY")
 
-MODEL = "gpt-4-0125-preview" # "gpt-3.5-turbo" - "gpt-4-0125-preview" - "gpt-3.5-turbo-0125" - OLD "gpt-3.5-turbo"
-EMBEDDING = "text-embedding-3-large"  # "text-embedding-3-small" - OLD "text-embedding-ada-002"
+MODEL = "gpt-4-0125-preview"
+EMBEDDING = "text-embedding-3-large"
+
 
 @cl.cache
 def load_context():
+    Settings.llm = OpenAI(
+        temperature=0.1, model=MODEL, max_tokens=128000, streaming=True
+    )
+    Settings.embed_model = OpenAIEmbedding(model=MODEL, embed_batch_size=1)
+    Settings.num_output = 1024
+    Settings.context_window = 128000
     pc = Pinecone(api_key=pinecone_api_key)
     pinecone_index = pc.Index("pinecone-index")
     vector_store = PineconeVectorStore(
         pinecone_index=pinecone_index,
     )
-    service_context = ServiceContext.from_defaults(
-        llm=OpenAI(
-            temperature=0.1, model=MODEL, max_tokens=3072, streaming=True
-        ),
-        embed_model=OpenAIEmbedding(model=EMBEDDING),
-        text_splitter=SentenceSplitter(chunk_size=1024, chunk_overlap=126),
-        callback_manager=CallbackManager([cl.LlamaIndexCallbackHandler()]),
-    )
-    set_global_service_context(service_context)
+
     index = VectorStoreIndex.from_vector_store(
         vector_store=vector_store,
     )
@@ -82,9 +78,7 @@ async def main(message: cl.Message):
 
     message_history.append({"author": "Human", "content": user_message})
     message_history.append({"author": "AI", "content": response_message.content})
-    message_history = message_history[
-        -6:
-    ]  # This keeps only the last 3 pairs of messages
+    message_history = message_history[-4:]
     cl.user_session.set("message_history", message_history)
 
     label_list = []

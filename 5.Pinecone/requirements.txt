@@ -1,7 +1,0 @@
-llama-index
-openai
-chainlit
-pypdf
-pinecone-client
-transformers
-torch

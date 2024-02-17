@@ -5,50 +5,49 @@ from dotenv import load_dotenv
 from pinecone import Pinecone, PodSpec
 from multiprocessing import freeze_support
 
-from llama_index import (
-    OpenAIEmbedding,
-    SimpleDirectoryReader,
-    download_loader,
-)
-from llama_index.llms import OpenAI
-from llama_index.ingestion import IngestionPipeline
-from llama_index.extractors import (
+from llama_index.core import SimpleDirectoryReader, download_loader
+from llama_index.llms.openai import OpenAI
+from llama_index.embeddings.openai import OpenAIEmbedding
+from llama_index.core.ingestion import IngestionPipeline
+from llama_index.vector_stores.pinecone import PineconeVectorStore
+from llama_index.core.extractors import (
     TitleExtractor,
     QuestionsAnsweredExtractor,
     SummaryExtractor,
     KeywordExtractor,
 )
-from llama_index.text_splitter import SentenceSplitter
-from llama_index.vector_stores import PineconeVectorStore
 from llama_hub.smart_pdf_loader import SmartPDFLoader
+from llama_index.core.node_parser import SentenceSplitter
 
 load_dotenv()
 openai.api_key = os.environ.get("OPENAI_API_KEY")
 pinecone_api_key = os.environ.get("PINECONE_API_KEY")
 
-MODEL = "gpt-4-0125-preview"  # "gpt-3.5-turbo" - "gpt-3.5-turbo-0125" - OLD "gpt-3.5-turbo"
-EMBEDDING = "text-embedding-3-large"  # "text-embedding-3-small" - OLD "text-embedding-ada-002"
+MODEL = "gpt-4-0125-preview"
+EMBEDDING = "text-embedding-3-large"
 
 pc = Pinecone(api_key=pinecone_api_key)
 
 num_cores = os.cpu_count()
 num_workers = min(4, num_cores)
 
-"""
+
 pc.create_index(
-    name="pinecone-index",
+    name="rag-index",
     dimension=3072,
     metric="dotproduct",
     spec=PodSpec(environment="gcp-starter"),
 )
-"""
-pinecone_index = pc.Index("pinecone-index")
+
+
+pinecone_index = pc.Index("rag-index")
 vector_store = PineconeVectorStore(
     pinecone_index=pinecone_index,
     add_sparse_vector=True,
 )
 
 UnstructuredReader = download_loader("UnstructuredReader")
+
 def run_pipeline():
     llm = OpenAI(temperature=0.1, model=MODEL, max_tokens=1024)
 

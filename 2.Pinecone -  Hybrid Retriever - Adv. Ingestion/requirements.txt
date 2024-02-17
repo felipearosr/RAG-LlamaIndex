@@ -1,4 +1,5 @@
 llama-index
+llama-index-vector-stores-pinecone
 openai
 chainlit
 pypdf
