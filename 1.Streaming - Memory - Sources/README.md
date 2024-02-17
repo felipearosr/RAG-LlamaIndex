@@ -2,7 +2,7 @@
 
 Welcome to GPT Documents, a basic OpenAI document chatbot powered by llama index and chainlit. This is the first and most basic form of a chatbot with documents.
 
-![](https://github.com/felipearosr/GPT-Documents/blob/main/1.Streaming%20-%20Memory%20-%20Sources/images/Rag.gif)
+![](https://github.com/felipearosr/GPT-Documents/blob/main/1.Streaming%20-%20Memory%20-%20Sources/images/RAG.gif)
 
 ## Installation Instructions
 
