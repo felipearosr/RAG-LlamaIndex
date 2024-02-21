@@ -7,7 +7,7 @@ Welcome to GPT Documents, a basic OpenAI document chatbot powered by llama index
 
 ## Table of Contents
 
-1. [Installation Instructions](#installation")
+1. [Installation](#installation")
 2. [Usage](#usage)
 3. [Streaming](#streaming)
 3. [Memory](#memory)
