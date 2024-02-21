@@ -7,13 +7,16 @@ from llama_index.core import Settings, VectorStoreIndex
 from llama_index.llms.openai import OpenAI
 from llama_index.embeddings.openai import OpenAIEmbedding
 from llama_index.vector_stores.pinecone import PineconeVectorStore
+from llama_index.core.response_synthesizers import ResponseMode
+from llama_index.postprocessor.cohere_rerank import CohereRerank
+from llama_index.core.indices.query.query_transform.base import StepDecomposeQueryTransform
 
 openai.api_key = os.environ.get("OPENAI_API_KEY")
+cohere_api_key = os.environ.get("COHERE_API_KEY")
 pinecone_api_key = os.environ.get("PINECONE_API_KEY")
 
 MODEL = "gpt-4-0125-preview"
 EMBEDDING = "text-embedding-3-large"
-
 
 @cl.cache
 def load_context():
@@ -39,10 +42,16 @@ def load_context():
 async def start():
     index = load_context()
 
+    reranker = CohereRerank(api_key=cohere_api_key, top_n=3)
+    step_decompose_transform = StepDecomposeQueryTransform(llm=MODEL, verbose=True)
+
     query_engine = index.as_query_engine(
         streaming=True,
-        similarity_top_k=4,
+        similarity_top_k=6,
+        node_postprocessors=[reranker],
         vector_store_query_mode="hybrid",
+        query_transform=step_decompose_transform,
+        response_synthesizer_mode=ResponseMode.REFINE,
     )
     cl.user_session.set("query_engine", query_engine)
 
@@ -78,7 +87,7 @@ async def main(message: cl.Message):
 
     message_history.append({"author": "Human", "content": user_message})
     message_history.append({"author": "AI", "content": response_message.content})
-    message_history = message_history[-4:]
+    message_history = message_history[-6:]
     cl.user_session.set("message_history", message_history)
 
     label_list = []

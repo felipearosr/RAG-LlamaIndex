@@ -1,0 +1,13 @@
+openai
+cohere
+chainlit
+llama-index
+pinecone-client
+
+
+torch
+pypdf
+llmsherpa
+llama-hub
+transformers
+#pip install llama-index-postprocessor-cohere-rerank
