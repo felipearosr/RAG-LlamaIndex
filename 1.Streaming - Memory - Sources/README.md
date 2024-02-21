@@ -1,6 +1,12 @@
-# Basic Doc ChatBot
+# ChatBot with streaming, memory and sources
 
-Welcome to GPT Documents, a basic OpenAI document chatbot powered by llama index and chainlit. This is the first and most basic form of a chatbot with documents.
+Embarking on the creation of an advanced Retrieval-Augmented Generation (RAG) system marks a significant first step towards innovative chatbot development. This foundational version incorporates three critical features:
+
+- **Streaming:** Enhance user experience with fast, real-time answers as the chatbot generates responses on-the-fly, reducing wait times.
+- **Memory:** Facilitate natural, conversational interactions by enabling the chatbot to recall previous parts of the conversation, adding context and relevance to the dialogue.
+- **Sources:** Increase transparency and trust by clearly indicating the origin of the chatbot's answers, allowing users to understand where the information is coming from.
+
+These functionalities are powered by technologies like the Llama-index and Chainlit, setting the stage for a more intuitive, responsive, and informed chatbot experience.
 
 ![](https://github.com/felipearosr/GPT-Documents/blob/main/1.Streaming%20-%20Memory%20-%20Sources/images/RAG.gif)
 
@@ -44,15 +50,19 @@ chainlit run main.py
 
 ## Streaming <a name="streaming"></a>
 
-### What is streaming?
+### Understanding Streaming in LLMs
+
+Streaming is a feature that enables real-time delivery of responses from the language learning model (LLM) as they are being generated. This process significantly reduces response latency by allowing immediate display of each part of the answer, token by token, as it is streamed from the LLM. This means users do not have to wait for the entire response to be composed and sent before beginning to read the answer, facilitating a smoother and faster interaction.
 
 
 ### How do we implement it?
 
 ```python
-Settings.llm = OpenAI(
+@cl.on_chat_start
+async def start():
+    Settings.llm = OpenAI(
         model="gpt-3.5-turbo", temperature=0.1, max_tokens=1024, streaming=True
-)
+    )
 ```
 
 
@@ -61,15 +71,19 @@ Settings.llm = OpenAI(
 
 ## Memory <a name="memory"></a>
 
-### What is memory?
+### Exploring Memory in LLMs
+
+Memory in llms is a feature we integrate to enhance their ability to maintain and recall the history of interactions with users. This functionality enriches the conversational experience by allowing the model to reference previous exchanges and build on them, creating a more coherent and contextually relevant dialogue.
 
 ### How do we implement it?
 ```python
 @cl.on_chat_start
 async def start():
     # ...
-    message_history = [] # create an empty list to store the message history
-    cl.user_session.set("message_history", message_history) # set it to user session
+    # create an empty list to store the message history
+    message_history = []
+    # set message_history to user_session
+    cl.user_session.set("message_history", message_history) 
     # ...
 ```
 
@@ -93,7 +107,7 @@ async def main(message: cl.Message):
 
 ## Sources <a name="sources"></a>
 
-### What are sources?
+### What are Sources?
 
 Sources refer to the documents or materials returned by the retrieval system, which provide the foundation for the answers to your queries. They offer a transparent way to verify the origin of the information used by the language model to generate its responses.
 
