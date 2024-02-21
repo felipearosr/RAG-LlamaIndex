@@ -13,7 +13,7 @@ Welcome to GPT Documents, a basic OpenAI document chatbot powered by llama index
 3. [Memory](#memory)
 3. [Sources](#sources)
 
-## Installation Instructions <a name="installation"></a>
+## Installation <a name="installation"></a>
 
 Follow these steps to set up the GPT Documents chatbot on your local machine:
 
