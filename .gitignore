@@ -9,6 +9,7 @@
 6.HybridRetrievercopy
 8.Prompting
 8.Token counter
+8.Evaluation with TruLens
 9.Cohere Reranker
 10.Query Transformation
 *.files
