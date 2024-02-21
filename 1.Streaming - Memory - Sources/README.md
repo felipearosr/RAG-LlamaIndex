@@ -137,7 +137,7 @@ Sources refer to the documents or materials returned by the retrieval system, wh
 
 ### How do we implement it?
 
-This is a basic implementation of sources, you can also separate them by files by using the metadata of the source_nodes.
+This is a basic implementation of sources, you can also separate them by file types, using the metadata of the source_nodes.
 
 ```python
 @cl.on_message
