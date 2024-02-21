@@ -55,7 +55,6 @@ async def main(message: cl.Message):
 
     response = await cl.make_async(query_engine.query)(prompt_template)
 
-
     for token in response.response_gen:
         await response_message.stream_token(token)
     if response.response_txt:
@@ -65,7 +64,7 @@ async def main(message: cl.Message):
     message_history.append({"author": "Human", "content": user_message})
     message_history.append({"author": "AI", "content": response_message.content})
     message_history = message_history[-4:]
-    cl.user_session.set("MESSAGE_HISTORY", message_history)
+    cl.user_session.set("message_history", message_history)
 
     label_list = []
     count = 1
@@ -85,4 +84,3 @@ async def main(message: cl.Message):
         count += 1
     response_message.content += "\n\nSources: " + ", ".join(label_list)
     await response_message.update()
-
