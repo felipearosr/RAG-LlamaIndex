@@ -1,4 +1,4 @@
-# Advanced Ingestion with llmsherpa
+# Adding 
 
 Improved ingestion of PDF files with [llmsherpa](https://github.com/nlmatics/llmsherpa). This includes features like:
 
@@ -13,7 +13,7 @@ Improved ingestion of PDF files with [llmsherpa](https://github.com/nlmatics/llm
 7. Watermark removal.
 
 ![Alt Text](images/RAGSources.png)
-## Installation Instructions
+## Installation
 
 Follow these steps to set up the GPT Documents chatbot on your local machine:
 
@@ -30,9 +30,9 @@ Follow these steps to set up the GPT Documents chatbot on your local machine:
    ```
 
 3. Load your documents into the vector store by: 
-    - Create a folder named 'data'.
-    - Place your documents inside the 'data' folder.
-    - Execute the 'ingest.py' script to initiate the loading process.
+    - Create a folder named `data`.
+    - Place your documents inside the `data` folder.
+    - Execute the `ingest.py` script to initiate the loading process.
 
 ## Usage
 
@@ -43,3 +43,120 @@ chainlit run -w main.py
 ```
 
 Feel free to explore the functionalities and contribute to the development of this project. Your feedback and contributions are highly appreciated!
+
+## Pinecone
+
+### What is Pinecone?
+
+Pinecone is a specialized vector database designed to optimize the storage and querying of vector embeddings. This capability enables efficient real-time analysis and extraction of insights from complex, large-scale data. Its architecture is specifically tuned for handling the intricacies of vector data, making it an ideal choice for applications requiring rapid retrieval and analysis of such information.
+
+In the provided example, Pinecone is utilized to create a hybrid index, which is a critical component for a hybrid retriever system. This system leverages both textual and vector-based data to enhance search and retrieval capabilities. While Pinecone is highlighted for its effective handling of vector embeddings and support for hybrid indexing, it's worth noting that other vector databases offering similar types of indexing could also be considered based on project requirements and specific use cases.
+
+By adopting Pinecone or a similar vector database, developers can implement advanced retrieval systems that combine the strengths of traditional and vector-based search methods, leading to more nuanced and efficient data handling and retrieval solutions.
+
+### How do we implement it?
+`main.py`
+```python
+from pinecone import Pinecone
+from llama_index.vector_stores.pinecone import PineconeVectorStore
+
+pinecone_api_key = os.environ.get("PINECONE_API_KEY")
+
+@cl.cache
+def load_context():
+    pc = Pinecone(api_key=pinecone_api_key)
+    pinecone_index = pc.Index("pinecone-index")
+    vector_store = PineconeVectorStore(
+        pinecone_index=pinecone_index,
+    )
+
+    index = VectorStoreIndex.from_vector_store(
+        vector_store=vector_store,
+    )
+    return index
+```
+`ingest.py`
+```python
+from pinecone import Pinecone, PodSpec
+from llama_index.vector_stores.pinecone import PineconeVectorStore
+
+pinecone_api_key = os.environ.get("PINECONE_API_KEY")
+pc = Pinecone(api_key=pinecone_api_key)
+"""
+# This part of code is commented as it must be used only the first time you run the
+# ingest script. You can also create the index manually in the pinecone dashboard.
+# Make sure you set the dimensions and metrics correctly.
+
+pc.create_index(
+    name="rag-index",
+    dimension=3072,
+    metric="dotproduct",
+    spec=PodSpec(environment="gcp-starter"),
+)
+"""
+pinecone_index = pc.Index("rag-index")
+vector_store = PineconeVectorStore(
+    pinecone_index=pinecone_index,
+    add_sparse_vector=True,
+)
+```
+
+## Hybrid Retriever
+
+### What is an Hybrid Retriever?
+
+A hybrid retriever is a sophisticated tool used in information retrieval systems, combining the best features of both dense and sparse vector methods to enhance search results' accuracy and relevance. In the context of AI and data search, this means leveraging the strengths of both context-understanding capabilities (dense vectors) and keyword-matching skills (sparse vectors).
+
+Typically, dense vectors are excellent at grasping the overall context of a query but may miss out on important keyword-specific details. On the other hand, sparse vectors excel at identifying exact keyword matches but might lack in understanding the broader context. A hybrid retriever merges these approaches, providing a more balanced and effective retrieval mechanism.
+
+For instance, in the field of document retrieval, such as with academic papers or medical abstracts, a hybrid approach can be particularly beneficial. By combining the contextual understanding of dense vector models with the precision of sparse retrieval methods like BM25, a hybrid retrieval pipeline can significantly improve the relevance and accuracy of search results.
+
+In practical applications, hybrid retrievers involve creating and processing both sparse and dense vectors for documents and queries. This includes tokenization processes for sparse vectors and embedding generation for dense vectors, as well as the management of these vectors within a suitable database or search engine like Pinecone or Weaviate. The retrieval process then utilizes these vectors to deliver highly relevant search results, balancing the depth of context and specificity of keywords.
+
+
+### How do we implement it?
+```python
+@cl.on_chat_start
+async def start():
+    # ...
+    # What is important here is adding `vector_store_query_mode="hybrid"`
+    # Is also really important to change what type of index you have, make sure
+    # that you read the ingestion part of this README.
+    query_engine = index.as_query_engine(
+        streaming=True,
+        similarity_top_k=4,
+        vector_store_query_mode="hybrid", # Added line of code
+    )
+    # ...
+```
+## Advanced Ingestion
+
+### What is advanced ingestion?
+
+Advanced ingestion involves specialized methods to optimize documents for better retrieval by large language models (LLMs). We use two main approaches:
+
+1. **Unstructured**: Applied for all document types except PDFs, enhancing data extraction and structuring to improve LLM readability. Explore various connectors from Llama Index for optimal results. More details [here](https://github.com/Unstructured-IO/unstructured).
+
+2. **LLM Sherpa**: Specifically for processing PDFs, transforming them into a more LLM-friendly format. Check it out [here](https://github.com/nlmatics/llmsherpa).
+
+3. **Metadata Enhancement**: We're incorporating metadata into the documents for enriched context and searchability. You have the option to exclude them as needed. However, be mindful that each piece of metadata incurs a processing cost by the LLM due to the additional analysis required.
+
+LLM Sherpa includes features like:
+
+- Sections and subsections along with their levels.
+- Paragraphs - combines lines.
+- Links between sections and paragraphs.
+- Tables along with the section the tables are found in.
+- Lists and nested lists.
+- Join content spread across pages.
+- Removal of repeating headers and footers.
+- Watermark removal.
+
+These methods ensure documents are more accessible and interpretable for LLMs, enhancing information retrieval efficiency.
+
+### How do we implement it?
+
+```python
+
+
+```

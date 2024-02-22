@@ -31,14 +31,14 @@ pc = Pinecone(api_key=pinecone_api_key)
 num_cores = os.cpu_count()
 num_workers = min(4, num_cores)
 
-
+"""
 pc.create_index(
     name="rag-index",
     dimension=3072,
     metric="dotproduct",
     spec=PodSpec(environment="gcp-starter"),
 )
-
+"""
 
 pinecone_index = pc.Index("rag-index")
 vector_store = PineconeVectorStore(
