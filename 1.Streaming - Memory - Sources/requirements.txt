@@ -1,6 +1,7 @@
-llama-index==0.10.3   # Feb 16 2024
-openai==1.12.0        # Feb 16 2024
-chainlit==1.0.200     # Feb 16 2024
-pypdf==4.0.1          # Feb 16 2024
-
-#pip install -U llama-index-llms-openai llama-index-embeddings-openai llama-index-core
+llama-index == 0.10.11                   # Feb 21 2024
+llama-index-core == 0.10.11.post1        # Feb 21 2024
+llama-index-llms-openai == 0.1.6         # Feb 21 2024
+llama-index-embeddings-openai == 0.1.6   # Feb 21 2024
+openai == 1.12.0                         # Feb 21 2024
+chainlit == 1.0.301                      # Feb 21 2024
+pypdf == 4.0.2                           # Feb 21 2024
