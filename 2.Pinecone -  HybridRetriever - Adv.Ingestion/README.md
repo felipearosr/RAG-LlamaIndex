@@ -9,7 +9,16 @@ In this updated version, we've added three major features to enhance the reposit
 3. **Advanced Ingestion**: Employs specialized techniques like Unstructured for general documents and LLM Sherpa for PDFs, plus metadata enhancement to improve document retrievability and context for LLMs.
 
 ![Alt Text](images/RAGSources.png)
-## Installation
+
+## Table of contents
+
+1. [Installation Instructions](#installation-instructions)
+2. [Usage](#usage)
+3. [Pinecone](#pinecone)
+4. [Hybrid Retriever](#hybrid-retriever)
+5. [Advanced Ingestion](#advanced-ingestion)
+
+## Installation Instructions
 
 Follow these steps to set up the GPT Documents chatbot on your local machine:
 
