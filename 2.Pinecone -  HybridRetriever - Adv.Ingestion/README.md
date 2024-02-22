@@ -152,7 +152,51 @@ These methods ensure documents are more accessible and interpretable for LLMs, e
 
 ### How do we implement it?
 
+```unstructured```
 ```python
+UnstructuredReader = download_loader("UnstructuredReader")
 
+directory = "./data/"
 
+directory_reader = SimpleDirectoryReader(
+   input_dir=directory,
+   file_extractor={
+      ".html": UnstructuredReader(),
+      ".txt": UnstructuredReader()
+   },
+)
+```
+
+`llm sherpa`
+```python
+documents = directory_reader.load_data(show_progress=True)
+
+llmsherpa_api_url = "https://readers.llmsherpa.com/api/document/developer/parseDocument?renderFormat=all"
+pdf_loader = SmartPDFLoader(llmsherpa_api_url=llmsherpa_api_url)
+
+# List all files in the folder
+pdf_files = [f for f in os.listdir(directory) if f.lower().endswith(".pdf")]
+
+# Load each PDF document and append it to the documents list
+for pdf_file in pdf_files:
+   pdf_path = os.path.join(directory, pdf_file)
+   pdf_document = pdf_loader.load_data(pdf_path)
+   documents += pdf_document
+
+```
+
+`metadata enhancement`
+```python
+pipeline = IngestionPipeline(
+   transformations=[
+      SentenceSplitter(chunk_size=512, chunk_overlap=126),
+         TitleExtractor(llm=llm, num_workers=num_workers),
+         QuestionsAnsweredExtractor(questions=3, llm=llm, num_workers=num_workers),
+         SummaryExtractor(summaries=["prev", "self"], llm=llm, num_workers=num_workers),
+         KeywordExtractor(keywords=5, llm=llm, num_workers=num_workers),
+         OpenAIEmbedding(model=EMBEDDING)
+      ],
+   vector_store=vector_store,
+)
+pipeline.run(documents=documents, show_progress=True, num_workers=num_workers)
 ```
