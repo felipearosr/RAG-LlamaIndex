@@ -10,7 +10,7 @@ In this updated version, we've added three major features to enhance the reposit
 
 ![](https://github.com/felipearosr/GPT-Documents/blob/main/1.Streaming%20-%20Memory%20-%20Sources/images/RAG.gif)
 
-## Table of contents
+## Table of Contents
 
 1. [Installation Instructions](#installation-instructions)
 2. [Usage](#usage)

@@ -12,6 +12,15 @@ By incorporating these methods, the repository not only improves the precision a
 
 ![](https://github.com/felipearosr/GPT-Documents/blob/main/1.Streaming%20-%20Memory%20-%20Sources/images/RAG.gif)
 
+## Table of Contents
+
+1. [Installation Instructions](#installation-instructions)
+2. [Usage](#usage)
+3. [Reranker](#reranker)
+4. [Query Transformations](#query-transformations)
+5. [Response Synthesis](#response-synthesis)
+
+
 ## Installation Instructions
 
 Follow these steps to set up the GPT Documents chatbot on your local machine:
