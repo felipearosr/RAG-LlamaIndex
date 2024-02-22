@@ -8,7 +8,7 @@ In this updated version, we've added three major features to enhance the reposit
 
 3. **Advanced Ingestion**: Employs specialized techniques like Unstructured for general documents and LLM Sherpa for PDFs, plus metadata enhancement to improve document retrievability and context for LLMs.
 
-![Alt Text](images/RAGSources.png)
+![](https://github.com/felipearosr/GPT-Documents/blob/main/1.Streaming%20-%20Memory%20-%20Sources/images/RAG.gif)
 
 ## Table of contents
 
