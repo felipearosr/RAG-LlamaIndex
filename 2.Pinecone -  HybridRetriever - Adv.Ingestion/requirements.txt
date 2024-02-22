@@ -6,5 +6,8 @@ pypdf
 llmsherpa
 pinecone-client
 llama-hub
-transformers
-torch
+#transformers
+#torch
+llama-index-core        # Feb 21 2024
+llama-index-llms-openai         # Feb 21 2024
+llama-index-embeddings-openai
