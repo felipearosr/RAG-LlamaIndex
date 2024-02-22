@@ -1,16 +1,4 @@
-# Adding 
-
-Improved ingestion of PDF files with [llmsherpa](https://github.com/nlmatics/llmsherpa). This includes features like:
-
-
-1. Sections and subsections along with their levels.
-2. Paragraphs - combines lines.
-3. Links between sections and paragraphs.
-4. Tables along with the section the tables are found in.
-5. Lists and nested lists.
-6. Join content spread across pages.
-6. Removal of repeating headers and footers.
-7. Watermark removal.
+# Adding vector db, hybrid retriever and improved ingestion
 
 ![Alt Text](images/RAGSources.png)
 ## Installation
