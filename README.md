@@ -4,11 +4,27 @@ Welcome to GPT Documents, a repository hosting various versions of chatbots powe
 
 ![](https://github.com/felipearosr/GPT-Documents/blob/main/1.Streaming%20-%20Memory%20-%20Sources/images/RAG.gif)
 
+## Table of Contents
+
+
+## 1.Streaming - Memory - Sources
+
+### Streaming
+
+### Memory
+
+### Sources
+
+## 2.Pinecone - Hybrid Retriever - Advanced Ingestion
+
+### Pinecone
+
+### Hybrid Retriever
+
+### Advanced Ingestion
+
 ## Roadmap
 The order might change, and points might be added.
-
-
-
 
 - [x] Chat Streaming
 - [X] Memory
