@@ -3,18 +3,14 @@ import os
 import json
 import openai
 import asyncio
-import csv
 
 from dotenv import load_dotenv
-from datetime import datetime
-
 from llama_index.core import VectorStoreIndex, Settings, SimpleDirectoryReader
 from llama_index.llms.openai import OpenAI
 from llama_index.core.evaluation import (
     FaithfulnessEvaluator,
     BatchEvalRunner,
     RelevancyEvaluator,
-    CorrectnessEvaluator,
 )
 from llama_index.embeddings.openai import OpenAIEmbedding
 from llama_index.postprocessor.cohere_rerank import CohereRerank
@@ -22,6 +18,10 @@ from llama_index.core.llama_dataset.generator import RagDatasetGenerator
 from llama_index.core.indices.query.query_transform.base import (
     StepDecomposeQueryTransform,
 )
+from llama_index.core.evaluation import DatasetGenerator
+import concurrent.futures
+import asyncio
+import nest_asyncio
 
 
 class Config:
@@ -92,7 +92,7 @@ def get_query_engine(index, config: Config):
     reranker = CohereRerank(api_key=config.cohere_api_key, top_n=3)
     query_engine = index.as_query_engine(
         similarity_top_k=6,
-        # vector_store_query_mode="hybrid",
+        vector_store_query_mode="hybrid",
         node_postprocessors=[reranker],
         query_transform=step_decompose_transform,
         response_synthesizer_mode="refine",
@@ -100,33 +100,36 @@ def get_query_engine(index, config: Config):
     return query_engine
 
 
-def get_eval_results(key, eval_results):
-    results = eval_results[key]
-    correct = 0
-    for result in results:
-        if result.passing:
-            correct += 1
-    score = correct / len(results)
-    print(f"{key} Score: {score}")
-    return score
-
-
 async def generate_questions(documents):
     """
     Generates a list of questions from documents stored in a specified directory.
+    This function runs the dataset generation in a separate thread to avoid
+    'asyncio.run()' conflict.
     Returns:
         A list of question strings generated from the document data.
     """
-    dataset_generator = RagDatasetGenerator.from_documents(
-        documents=documents,
-        num_questions_per_chunk=2,  # set the number of questions per nodes
-    )
-    rag_dataset = await dataset_generator.agenerate_questions_from_nodes()
-    questions = [e.query for e in rag_dataset.examples]
-    return questions
+
+    def blocking_generate_questions():
+        dataset_generator = RagDatasetGenerator.from_documents(
+            documents=documents,
+            num_questions_per_chunk=2,
+        )
+        print("Generating dataset from nodes...")
+
+        for task in asyncio.all_tasks():
+            print(task, task.done())
+
+        # Directly call the synchronous version which might internally call asyncio.run()
+        return dataset_generator.generate_dataset_from_nodes()
+
+    # Run the blocking function in a separate thread
+    loop = asyncio.get_running_loop()
+    with concurrent.futures.ThreadPoolExecutor() as pool:
+        rag_dataset = await loop.run_in_executor(pool, blocking_generate_questions)
+    return rag_dataset
 
 
-async def evaluate(questions, query_engine):
+async def evaluate(rag_dataset, query_engine):
     """
     Evaluates the set of questions using the provided query engine.
     Args:
@@ -135,20 +138,14 @@ async def evaluate(questions, query_engine):
     Returns:
         The results of the evaluation.
     """
-    relevancy_evaluator = RelevancyEvaluator()
-    correctness_evaluator = CorrectnessEvaluator()
     faithfulness_evaluator = FaithfulnessEvaluator()
-
+    relevancy_evaluator = RelevancyEvaluator()
     runner = BatchEvalRunner(
-        {
-            "relevancy": relevancy_evaluator,
-            "correctness": correctness_evaluator,
-            "faithfulness": faithfulness_evaluator,
-        },
+        {"faithfulness": faithfulness_evaluator, "relevancy": relevancy_evaluator},
         workers=8,
     )
     eval_results = await runner.aevaluate_queries(
-        query_engine=query_engine, queries=questions
+        query_engine=query_engine, queries=rag_dataset.questions
     )
     return eval_results
 
@@ -213,15 +210,11 @@ async def main():
         eval_results = await evaluate(rag_dataset, query_engine)
         print("Evaluation completed.")
 
-        #print("Evaluation Results:", eval_results)
-
-        score = get_eval_results("correctness", eval_results)
-        print(f"Correctness Score: {score}")
-        score = get_eval_results("relevancy", eval_results)
-        print(f"Relevancy Score: {score}")
+        print("Evaluation Results:", eval_results)
     except Exception as e:
         print(f"An error occurred: {e}")
 
 
 if __name__ == "__main__":
+    print("Starting event loop.")
     asyncio.run(main())
