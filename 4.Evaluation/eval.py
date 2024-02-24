@@ -1,9 +1,9 @@
-import argparse
 import os
+import csv
 import json
 import openai
 import asyncio
-import csv
+import argparse
 import pandas as pd
 
 from dotenv import load_dotenv
@@ -147,7 +147,9 @@ def write_eval_results_to_csv_with_pandas(eval_results):
             if isinstance(result_data, dict):
                 for key, value in result_data.items():
                     # Ensure proper capitalization matches the column names
-                    proper_key = key[0].upper() + key[1:] if key else key  # Adjust if necessary
+                    proper_key = (
+                        key[0].upper() + key[1:] if key else key
+                    )  # Adjust if necessary
                     if proper_key in new_record:
                         new_record[proper_key] = value
             else:
