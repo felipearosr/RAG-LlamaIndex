@@ -114,66 +114,73 @@ def get_eval_results(key, eval_results):
 
 def write_eval_results_to_csv_with_pandas(eval_results):
     """
-    Writes evaluation results to a CSV file using Pandas. This function is adapted for eval_results being a dictionary
-    where each key is a category and each value is a list of EvaluationResult objects. Each EvaluationResult attribute
-    like response, passing, feedback, etc., becomes a separate column.
+    Writes merged evaluation results to a CSV file using Pandas. This function merges results from 'correctness',
+    'relevancy', and 'faithfulness' categories, specifically their scores, into one record.
+    Common attributes like 'query', 'response', etc., are maintained. Scores for each category are separated into distinct columns.
     The CSV file is saved into an 'output' folder. If the folder does not exist, it is created.
-    If a file with the name 'eval_results.csv' exists in the 'output' folder, a new file is created with a timestamp to avoid overwriting.
+    If a file with the name 'eval_results.csv' exists, a new file is created with a timestamp to avoid overwriting.
     """
     reshaped_results = []
 
+    # Define the new columns, including separate score columns for each category and other common attributes
     columns = [
-        "Category",
         "Query",
         "Response",
-        "Score",
         "Contexts",
         "Passing",
         "Feedback",
         "PairwiseSource",
         "InvalidResult",
         "InvalidReason",
+        "Correctness_Score",
+        "Relevancy_Score",
+        "Faithfulness_Score",
     ]
 
-    for category, evaluations in eval_results.items():
-        for eval_result in evaluations:
+    # Iterate through each set of evaluations assuming they are of the same length and aligned
+    for index in range(
+        len(eval_results["correctness"])
+    ):  # Assumes all lists have the same length
+        new_record = {col: None for col in columns}
+
+        # Merge records from each category for the same index
+        for category in ["correctness", "relevancy", "faithfulness"]:
+            eval_result = eval_results[category][index]
+
+            # Convert EvaluationResult to dictionary if necessary
             result_data = (
-                vars(eval_result) if hasattr(eval_result, "__dict__") else eval_result
+                eval_result.dict() if hasattr(eval_result, "dict") else eval_result
             )
 
-            new_record = {col: None for col in columns}
-            new_record["Category"] = category
-
-            if isinstance(result_data, dict):
-                for key, value in result_data.items():
-                    # Ensure proper capitalization matches the column names
-                    proper_key = (
-                        key[0].upper() + key[1:] if key else key
-                    )  # Adjust if necessary
-                    if proper_key in new_record:
+            # Populate the new record, ensuring scores are assigned to their specific columns
+            for key, value in result_data.items():
+                if key == "score":
+                    new_record[f"{category.capitalize()}_Score"] = (
+                        value  # Category-specific score
+                    )
+                else:
+                    # Ensure capitalization matches the column names and prevent overwriting of existing values
+                    proper_key = key[0].upper() + key[1:] if key else key
+                    if proper_key in new_record and new_record[proper_key] is None:
                         new_record[proper_key] = value
-            else:
-                print(
-                    f"Cannot process eval_result, expected a dictionary or an object with '__dict__': {eval_result}"
-                )
-                continue
 
-            reshaped_results.append(new_record)
+        # Add the merged record to the reshaped results
+        reshaped_results.append(new_record)
 
+    # Write the reshaped results to a CSV file
     if reshaped_results:
-        df = pd.DataFrame(reshaped_results, columns=columns)
+        import pandas as pd
+        import os
+        from datetime import datetime
 
-        # Ensure the 'output' directory exists
+        df = pd.DataFrame(reshaped_results, columns=columns)
         output_dir = "output"
         os.makedirs(output_dir, exist_ok=True)
-
-        # Prepare the filename
         filename = "eval_results.csv"
         full_path = os.path.join(output_dir, filename)
         if os.path.exists(full_path):
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             full_path = os.path.join(output_dir, f"eval_results_{timestamp}.csv")
-
         df.to_csv(full_path, index=False)
         print(f"Results written to {full_path}")
     else:
@@ -188,7 +195,7 @@ async def generate_questions(documents):
     """
     dataset_generator = RagDatasetGenerator.from_documents(
         documents=documents,
-        num_questions_per_chunk=2,  # set the number of questions per nodes
+        num_questions_per_chunk=3,  # set the number of questions per nodes
     )
     rag_dataset = await dataset_generator.agenerate_questions_from_nodes()
     questions = [e.query for e in rag_dataset.examples]
