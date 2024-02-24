@@ -121,44 +121,50 @@ def write_eval_results_to_csv_with_pandas(eval_results):
     """
     reshaped_results = []
 
-    # Define all possible columns based on EvaluationResult attributes
-    columns = ['Category', 'Query', 'Response', 'Score', 'Contexts', 'Passing', 'Feedback', 'PairwiseSource', 'InvalidResult', 'InvalidReason']
+    columns = [
+        "Category",
+        "Query",
+        "Response",
+        "Score",
+        "Contexts",
+        "Passing",
+        "Feedback",
+        "PairwiseSource",
+        "InvalidResult",
+        "InvalidReason",
+    ]
 
-    # Iterate over each evaluation category and its list of results
     for category, evaluations in eval_results.items():
         for eval_result in evaluations:
-            # Convert eval_result to a dictionary if possible
-            result_data = vars(eval_result) if hasattr(eval_result, '__dict__') else eval_result
+            result_data = (
+                vars(eval_result) if hasattr(eval_result, "__dict__") else eval_result
+            )
 
-            # Build a new record for this evaluation result
-            new_record = {col: None for col in columns}  # Initialize all columns to None
-            new_record['Category'] = category  # Set the category
+            new_record = {col: None for col in columns}
+            new_record["Category"] = category
 
             if isinstance(result_data, dict):
-                # Update new_record with actual values from result_data
                 for key, value in result_data.items():
-                    if key.capitalize() in new_record:  # Ensure the key matches expected column names
-                        new_record[key.capitalize()] = value  # Update the value for this key in the record
+                    if key.capitalize() in new_record:
+                        new_record[key.capitalize()] = value
             else:
-                print(f"Cannot process eval_result, expected a dictionary or an object with '__dict__': {eval_result}")
-                continue  # Skip this eval_result
+                print(
+                    f"Cannot process eval_result, expected a dictionary or an object with '__dict__': {eval_result}"
+                )
+                continue
 
-            reshaped_results.append(new_record)  # Add the new record to the results list
+            reshaped_results.append(new_record)
 
-    # Only proceed if reshaped_results has data
     if reshaped_results:
-        # Convert the reshaped list of dictionaries into a DataFrame
         df = pd.DataFrame(reshaped_results, columns=columns)
 
-        # Prepare the filename
-        filename = 'eval_results.csv'
+        filename = "eval_results.csv"
         if os.path.exists(filename):
-            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-            filename = f'eval_results_{timestamp}.csv'
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            filename = f"eval_results_{timestamp}.csv"
 
-        # Write the DataFrame to a CSV file
         df.to_csv(filename, index=False)
-        print(f'Results written to {filename}')
+        print(f"Results written to {filename}")
     else:
         print("No data to write to CSV.")
 
@@ -248,7 +254,6 @@ async def main():
     initializing index and query engine, generating or loading questions,
     and evaluating them. Supports generating questions based on a command line flag.
     """
-    # Set up command line argument parsing
     parser = argparse.ArgumentParser(description="Process some integers.")
     parser.add_argument(
         "--generate",
@@ -273,21 +278,14 @@ async def main():
 
         questions_file = "questions.json"
 
-        # Handle question generation or loading
         rag_dataset = await handle_question_generation(args, documents, questions_file)
 
         print("Evaluating questions...")
         eval_results = await evaluate(rag_dataset, query_engine)
         print("Evaluation completed.")
 
-        # Writing evaluation results to CSV using Pandas
         write_eval_results_to_csv_with_pandas(eval_results)
-        """
-        score = get_eval_results("correctness", eval_results)
-        print(f"Correctness Score: {score}")
-        score = get_eval_results("relevancy", eval_results)
-        print(f"Relevancy Score: {score}")
-        """
+
     except Exception as e:
         print(f"An error occurred: {e}")
 
