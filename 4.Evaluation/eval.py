@@ -117,7 +117,8 @@ def write_eval_results_to_csv_with_pandas(eval_results):
     Writes evaluation results to a CSV file using Pandas. This function is adapted for eval_results being a dictionary
     where each key is a category and each value is a list of EvaluationResult objects. Each EvaluationResult attribute
     like response, passing, feedback, etc., becomes a separate column.
-    If a file with the name 'eval_results.csv' exists, a new file is created with a timestamp to avoid overwriting.
+    The CSV file is saved into an 'output' folder. If the folder does not exist, it is created.
+    If a file with the name 'eval_results.csv' exists in the 'output' folder, a new file is created with a timestamp to avoid overwriting.
     """
     reshaped_results = []
 
@@ -145,8 +146,10 @@ def write_eval_results_to_csv_with_pandas(eval_results):
 
             if isinstance(result_data, dict):
                 for key, value in result_data.items():
-                    if key.capitalize() in new_record:
-                        new_record[key.capitalize()] = value
+                    # Ensure proper capitalization matches the column names
+                    proper_key = key[0].upper() + key[1:] if key else key  # Adjust if necessary
+                    if proper_key in new_record:
+                        new_record[proper_key] = value
             else:
                 print(
                     f"Cannot process eval_result, expected a dictionary or an object with '__dict__': {eval_result}"
@@ -158,13 +161,19 @@ def write_eval_results_to_csv_with_pandas(eval_results):
     if reshaped_results:
         df = pd.DataFrame(reshaped_results, columns=columns)
 
-        filename = "eval_results.csv"
-        if os.path.exists(filename):
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            filename = f"eval_results_{timestamp}.csv"
+        # Ensure the 'output' directory exists
+        output_dir = "output"
+        os.makedirs(output_dir, exist_ok=True)
 
-        df.to_csv(filename, index=False)
-        print(f"Results written to {filename}")
+        # Prepare the filename
+        filename = "eval_results.csv"
+        full_path = os.path.join(output_dir, filename)
+        if os.path.exists(full_path):
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            full_path = os.path.join(output_dir, f"eval_results_{timestamp}.csv")
+
+        df.to_csv(full_path, index=False)
+        print(f"Results written to {full_path}")
     else:
         print("No data to write to CSV.")
 
