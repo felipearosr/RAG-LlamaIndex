@@ -4,6 +4,7 @@ import json
 import openai
 import asyncio
 import csv
+import pandas as pd
 
 from dotenv import load_dotenv
 from datetime import datetime
@@ -111,6 +112,57 @@ def get_eval_results(key, eval_results):
     return score
 
 
+def write_eval_results_to_csv_with_pandas(eval_results):
+    """
+    Writes evaluation results to a CSV file using Pandas. This function is adapted for eval_results being a dictionary
+    where each key is a category and each value is a list of EvaluationResult objects. Each EvaluationResult attribute
+    like response, passing, feedback, etc., becomes a separate column.
+    If a file with the name 'eval_results.csv' exists, a new file is created with a timestamp to avoid overwriting.
+    """
+    reshaped_results = []
+
+    # Define all possible columns based on EvaluationResult attributes
+    columns = ['Category', 'Query', 'Response', 'Score', 'Contexts', 'Passing', 'Feedback', 'PairwiseSource', 'InvalidResult', 'InvalidReason']
+
+    # Iterate over each evaluation category and its list of results
+    for category, evaluations in eval_results.items():
+        for eval_result in evaluations:
+            # Convert eval_result to a dictionary if possible
+            result_data = vars(eval_result) if hasattr(eval_result, '__dict__') else eval_result
+
+            # Build a new record for this evaluation result
+            new_record = {col: None for col in columns}  # Initialize all columns to None
+            new_record['Category'] = category  # Set the category
+
+            if isinstance(result_data, dict):
+                # Update new_record with actual values from result_data
+                for key, value in result_data.items():
+                    if key.capitalize() in new_record:  # Ensure the key matches expected column names
+                        new_record[key.capitalize()] = value  # Update the value for this key in the record
+            else:
+                print(f"Cannot process eval_result, expected a dictionary or an object with '__dict__': {eval_result}")
+                continue  # Skip this eval_result
+
+            reshaped_results.append(new_record)  # Add the new record to the results list
+
+    # Only proceed if reshaped_results has data
+    if reshaped_results:
+        # Convert the reshaped list of dictionaries into a DataFrame
+        df = pd.DataFrame(reshaped_results, columns=columns)
+
+        # Prepare the filename
+        filename = 'eval_results.csv'
+        if os.path.exists(filename):
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            filename = f'eval_results_{timestamp}.csv'
+
+        # Write the DataFrame to a CSV file
+        df.to_csv(filename, index=False)
+        print(f'Results written to {filename}')
+    else:
+        print("No data to write to CSV.")
+
+
 async def generate_questions(documents):
     """
     Generates a list of questions from documents stored in a specified directory.
@@ -153,6 +205,43 @@ async def evaluate(questions, query_engine):
     return eval_results
 
 
+async def handle_question_generation(args, documents, questions_file):
+    """
+    Handles the generation of new questions or the loading of existing questions based on command line arguments.
+    Args:
+        args: Command line arguments.
+        documents: The document data used for question generation.
+        questions_file: The file where questions are saved or loaded from.
+    Returns:
+        A dataset containing the questions.
+    """
+    if args.generate:
+        print("Flag for generating new questions detected.")
+        rag_dataset = await generate_questions(documents)
+        print("Generated new questions.")
+        with open(questions_file, "w") as f:
+            json.dump(rag_dataset, f)
+        print(f"Questions saved to {questions_file}.")
+    else:
+        print("Checking for existing questions...")
+        try:
+            with open(questions_file, "r") as f:
+                content = f.read().strip()  # Read and strip whitespace
+                if content:  # Check if the content is non-empty
+                    rag_dataset = json.loads(content)
+                    print("Loaded questions from file.")
+                else:
+                    raise json.JSONDecodeError("File is empty", content, 0)
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            print(f"Error loading questions: {e}")
+            rag_dataset = await generate_questions(documents)
+            print("Generated new questions due to error loading existing ones.")
+            with open(questions_file, "w") as f:
+                json.dump(rag_dataset, f)
+            print(f"Questions saved to {questions_file}.")
+    return rag_dataset
+
+
 async def main():
     """
     Orchestrates the loading of environment variables, setting configurations,
@@ -184,41 +273,21 @@ async def main():
 
         questions_file = "questions.json"
 
-        if args.generate:
-            print("Flag for generating new questions detected.")
-            rag_dataset = await generate_questions(documents)
-            print("Generated new questions.")
-            with open(questions_file, "w") as f:
-                json.dump(rag_dataset, f)
-            print(f"Questions saved to {questions_file}.")
-        else:
-            print("Checking for existing questions...")
-            try:
-                with open(questions_file, "r") as f:
-                    content = f.read().strip()  # Read and strip whitespace
-                    if content:  # Check if the content is non-empty
-                        rag_dataset = json.loads(content)
-                        print("Loaded questions from file.")
-                    else:
-                        raise json.JSONDecodeError("File is empty", content, 0)
-            except (FileNotFoundError, json.JSONDecodeError) as e:
-                print(f"Error loading questions: {e}")
-                rag_dataset = await generate_questions(documents)
-                print("Generated new questions due to error loading existing ones.")
-                with open(questions_file, "w") as f:
-                    json.dump(rag_dataset, f)
-                print(f"Questions saved to {questions_file}.")
+        # Handle question generation or loading
+        rag_dataset = await handle_question_generation(args, documents, questions_file)
 
         print("Evaluating questions...")
         eval_results = await evaluate(rag_dataset, query_engine)
         print("Evaluation completed.")
 
-        #print("Evaluation Results:", eval_results)
-
+        # Writing evaluation results to CSV using Pandas
+        write_eval_results_to_csv_with_pandas(eval_results)
+        """
         score = get_eval_results("correctness", eval_results)
         print(f"Correctness Score: {score}")
         score = get_eval_results("relevancy", eval_results)
         print(f"Relevancy Score: {score}")
+        """
     except Exception as e:
         print(f"An error occurred: {e}")
 
