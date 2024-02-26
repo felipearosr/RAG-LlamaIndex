@@ -1,28 +1,38 @@
-# GPT Documents
+# GPT Documents Chatbot Enhancement Project
 
-Welcome to GPT Documents, a repository hosting various versions of chatbots powered by llama-index and chainlit, you can chat with PDFs, .txt files and html files. This collection showcases a progresive and comprehensive way to build a RAG step by step, the idea is to finish up with an advanced RAG utilizing various techniques.
+This project focuses on enhancing the GPT Documents chatbot by introducing several innovative features across different stages of development, aimed at improving user interaction, search accuracy, and response quality. 
 
 ![](https://github.com/felipearosr/GPT-Documents/blob/main/1.Streaming%20-%20Memory%20-%20Sources/images/RAG.gif)
 
-## Table of Contents
+## Project Overview:
 
+1. **ChatBot with Streaming, Memory, and Sources**: The initial version introduces streaming for real-time response delivery, memory for contextual conversations, and source indication for transparency. Technologies like Llama-index and Chainlit are utilized to facilitate a more intuitive and informative chatbot experience.
 
-## 1.Streaming - Memory - Sources
+2. **Vector DB Integration, Hybrid Retriever, and Advanced Ingestion**: Subsequent updates include Pinecone integration for efficient vector data handling, a hybrid retriever combining dense and sparse vector methods for improved search relevance, and advanced ingestion techniques for better document retrieval and processing.
 
-### Streaming
+3. **Reranker, Query Transformations, and Response Synthesis**: Further enhancements incorporate the Cohere reranker for semantic document reordering, multi-step query transformations for detailed query processing, and response synthesis methods for generating more accurate and comprehensive answers.
 
-### Memory
+## Key Features and Improvements:
 
-### Sources
+- **Real-time Interaction**: Implements streaming to deliver answers swiftly, enhancing user experience.
+  
+- **Conversational Memory**: Employs memory capabilities to provide context-aware responses based on previous interactions.
+  
+- **Source Transparency**: Indicates the origin of the chatbot's responses, building user trust.
 
-## 2.Pinecone - Hybrid Retriever - Advanced Ingestion
+- **Efficient Data Handling**: Utilizes Pinecone for optimized vector data management, enabling faster and more relevant search results.
 
-### Pinecone
+- **Enhanced Search Accuracy**: Introduces a hybrid retriever that merges dense and sparse search methodologies, offering more precise results.
 
-### Hybrid Retriever
+- **Improved Document Processing**: Incorporates advanced ingestion techniques for various document types, enhancing the chatbot's understanding and retrieval capabilities.
 
-### Advanced Ingestion
+- **Semantic Reranking**: Integrates a reranker to adjust search results based on semantic relevance, ensuring responses align more closely with user queries.
 
+- **Advanced Query Processing**: Applies multi-step query transformations to break down complex inquiries into manageable parts, ensuring thorough exploration of user intents.
+
+- **Dynamic Response Generation**: Adopts multiple response synthesis methods, tailoring the chatbot's replies to user needs and ensuring comprehensive and detailed answers.
+
+This project represents a comprehensive approach to developing a sophisticated chatbot capable of real-time interaction, contextual understanding, and accurate information retrieval, all while maintaining transparency and user trust.
 ## Roadmap
 The order might change, and points might be added.
 
