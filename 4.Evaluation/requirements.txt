@@ -2,3 +2,4 @@ spacy
 datasets
 span-marker
 scikit-learn
+llama-index-vector-stores-pinecone

@@ -24,13 +24,16 @@ from llama_index.core.indices.query.query_transform.base import (
     StepDecomposeQueryTransform,
 )
 
+from main import get_query_engine, get_index
+from generation import handle_question_generation
+
 
 class Config:
     def __init__(self):
         load_dotenv()
         self.openai_api_key = self._load_env_var("OPENAI_API_KEY")
         self.cohere_api_key = self._load_env_var("COHERE_API_KEY")
-        self.model = os.getenv("MODEL", "gpt-4-0125-preview")
+        self.model = os.getenv("MODEL", "gpt-3.5-turbo-0125") # gpt-4-0125-preview
         self.embedding = os.getenv("EMBEDDING", "text-embedding-3-large")
         self.temperature = 0.1
         self.num_output = 1024
@@ -42,63 +45,6 @@ class Config:
         if not value:
             raise EnvironmentError(f"Missing required environment variable: {name}")
         return value
-
-
-def set_settings(config: Config):
-    """
-    Sets the settings for the application using environment variables.
-    Includes settings for LLM, embedding model, output number, and context window size.
-    """
-    model = os.getenv("MODEL", "gpt-4-0125-preview")
-    embed_model = os.getenv("EMBEDDING", "text-embedding-3-large")
-
-    Settings.llm = OpenAI(
-        temperature=config.temperature,
-        model=config.model,
-    )
-    Settings.embed_model = OpenAIEmbedding(
-        model=config.embedding,
-    )
-    Settings.num_output = config.num_output
-    Settings.context_window = config.context_window
-
-
-def get_index(documents):
-    """
-    Initializes and returns the Pinecone index used for vector storage.
-    """
-    return VectorStoreIndex.from_documents(documents)
-
-
-def get_documents(data_directory):
-    """
-    Loads and returns the documents from a specified directory.
-    """
-    if not os.path.exists(data_directory):
-        raise FileNotFoundError(
-            f"The data directory '{data_directory}' does not exist."
-        )
-    return SimpleDirectoryReader(data_directory).load_data(show_progress=True)
-
-
-def get_query_engine(index, config: Config):
-    """
-    Creates and returns a query engine with specified settings, including the step
-    decomposition transform and the reranker.
-    Args:
-        index: The VectorStoreIndex object to use for querying.
-    """
-    step_decompose_transform = StepDecomposeQueryTransform(verbose=True)
-
-    reranker = CohereRerank(api_key=config.cohere_api_key, top_n=3)
-    query_engine = index.as_query_engine(
-        similarity_top_k=6,
-        # vector_store_query_mode="hybrid",
-        node_postprocessors=[reranker],
-        query_transform=step_decompose_transform,
-        response_synthesizer_mode="refine",
-    )
-    return query_engine
 
 
 def get_eval_results(key, eval_results):
@@ -187,21 +133,6 @@ def write_eval_results_to_csv_with_pandas(eval_results):
         print("No data to write to CSV.")
 
 
-async def generate_questions(documents):
-    """
-    Generates a list of questions from documents stored in a specified directory.
-    Returns:
-        A list of question strings generated from the document data.
-    """
-    dataset_generator = RagDatasetGenerator.from_documents(
-        documents=documents,
-        num_questions_per_chunk=3,  # set the number of questions per nodes
-    )
-    rag_dataset = await dataset_generator.agenerate_questions_from_nodes()
-    questions = [e.query for e in rag_dataset.examples]
-    return questions
-
-
 async def evaluate(questions, query_engine):
     """
     Evaluates the set of questions using the provided query engine.
@@ -229,74 +160,62 @@ async def evaluate(questions, query_engine):
     return eval_results
 
 
-async def handle_question_generation(args, documents, questions_file):
-    """
-    Handles the generation of new questions or the loading of existing questions based on command line arguments.
-    Args:
-        args: Command line arguments.
-        documents: The document data used for question generation.
-        questions_file: The file where questions are saved or loaded from.
-    Returns:
-        A dataset containing the questions.
-    """
-    if args.generate:
-        print("Flag for generating new questions detected.")
-        rag_dataset = await generate_questions(documents)
-        print("Generated new questions.")
-        with open(questions_file, "w") as f:
-            json.dump(rag_dataset, f)
-        print(f"Questions saved to {questions_file}.")
-    else:
-        print("Checking for existing questions...")
-        try:
-            with open(questions_file, "r") as f:
-                content = f.read().strip()  # Read and strip whitespace
-                if content:  # Check if the content is non-empty
-                    rag_dataset = json.loads(content)
-                    print("Loaded questions from file.")
-                else:
-                    raise json.JSONDecodeError("File is empty", content, 0)
-        except (FileNotFoundError, json.JSONDecodeError) as e:
-            print(f"Error loading questions: {e}")
-            rag_dataset = await generate_questions(documents)
-            print("Generated new questions due to error loading existing ones.")
-            with open(questions_file, "w") as f:
-                json.dump(rag_dataset, f)
-            print(f"Questions saved to {questions_file}.")
-    return rag_dataset
-
-
 async def main():
     """
     Orchestrates the loading of environment variables, setting configurations,
     initializing index and query engine, generating or loading questions,
     and evaluating them. Supports generating questions based on a command line flag.
     """
-    parser = argparse.ArgumentParser(description="Process some integers.")
+    parser = argparse.ArgumentParser(description="Run components based on flags.")
+    # parser.add_argument('--eval', action='store_true', help='Run the evaluation component')
     parser.add_argument(
-        "--generate",
-        action="store_true",
-        help="Generate new questions before evaluation",
+        "--gen", action="store_true", help="Run the generation component"
     )
+    parser.add_argument("--tune", action="store_true", help="Run the tuning component")
     args = parser.parse_args()
 
     try:
         config = Config()
         print("Environment variables loaded successfully.")
 
-        set_settings(config)
-        print("Settings set successfully.")
-
-        print("Loading documents...")
-        documents = get_documents("./data")
-
-        index = get_index(documents)
+        index = get_index()
         query_engine = get_query_engine(index, config)
         print("Query engine initialized successfully.")
 
         questions_file = "questions.json"
+        """
+        if args.eval:
+            print("Running evaluation")
+        """
+        missing_questions = False
 
-        rag_dataset = await handle_question_generation(args, documents, questions_file)
+        if args.tune:
+            print("Running tuning")
+            return
+
+        """
+        quesiton generation check,
+        """
+        try:
+            with open(query_engine, "r") as f:
+                content = f.read().strip()
+                if content:
+                    rag_dataset = json.loads(content)
+                    print("Loaded questions from file.")
+                else:
+                    raise json.JSONDecodeError("File is empty", content, 0)
+        except:
+            missing_questions = True
+
+        # nice
+        if args.gen or missing_questions:
+            if not args.gen and missing_questions:
+                print("Running generation")
+                rag_dataset = await handle_question_generation(questions_file)
+            else:
+                print("Overriting questions")
+                rag_dataset = await handle_question_generation(questions_file)
+                return
 
         print("Evaluating questions...")
         eval_results = await evaluate(rag_dataset, query_engine)

@@ -4,10 +4,10 @@ chainlit
 llama-index
 pinecone-client
 
-
+llama-index-vector-stores-pinecone
 torch
 pypdf
 llmsherpa
 llama-hub
 transformers
-#pip install llama-index-postprocessor-cohere-rerank
+llama-index-postprocessor-cohere-rerank
