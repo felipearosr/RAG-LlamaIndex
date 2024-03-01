@@ -52,3 +52,4 @@ The order might change, and points might be added.
 - [ ] Trying out GPT as a reranker and comparing it with others
 - [ ] Adding Mistral and Llama examples
 - [ ] Adding jupyter files to each subproject.
+- [ ] Intent Detection, using 3.5T for some easy tasks.
