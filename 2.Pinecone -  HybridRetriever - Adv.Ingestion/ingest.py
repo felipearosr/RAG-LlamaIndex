@@ -2,7 +2,7 @@ import os
 import openai
 
 from dotenv import load_dotenv
-from pinecone import Pinecone, PodSpec
+from pinecone import Pinecone#, PodSpec
 from multiprocessing import freeze_support
 
 from llama_index.core import SimpleDirectoryReader, download_loader
@@ -48,6 +48,7 @@ vector_store = PineconeVectorStore(
 
 UnstructuredReader = download_loader("UnstructuredReader")
 
+
 def run_pipeline():
     llm = OpenAI(temperature=0.1, model=MODEL, max_tokens=1024)
 
@@ -55,10 +56,7 @@ def run_pipeline():
 
     directory_reader = SimpleDirectoryReader(
         input_dir=directory,
-        file_extractor={
-            ".html": UnstructuredReader(),
-            ".txt": UnstructuredReader()
-        },
+        file_extractor={".html": UnstructuredReader(), ".txt": UnstructuredReader()},
     )
 
     documents = directory_reader.load_data(show_progress=True)
@@ -75,23 +73,23 @@ def run_pipeline():
         pdf_document = pdf_loader.load_data(pdf_path)
         documents += pdf_document
 
-
     pipeline = IngestionPipeline(
         transformations=[
             SentenceSplitter(chunk_size=512, chunk_overlap=126),
             TitleExtractor(llm=llm, num_workers=num_workers),
             QuestionsAnsweredExtractor(questions=3, llm=llm, num_workers=num_workers),
-            SummaryExtractor(summaries=["prev", "self"], llm=llm, num_workers=num_workers),
+            SummaryExtractor(
+                summaries=["prev", "self"], llm=llm, num_workers=num_workers
+            ),
             KeywordExtractor(keywords=5, llm=llm, num_workers=num_workers),
-            OpenAIEmbedding(model=EMBEDDING)
+            OpenAIEmbedding(model=EMBEDDING),
         ],
         vector_store=vector_store,
     )
 
     pipeline.run(documents=documents, show_progress=True, num_workers=num_workers)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     freeze_support()
     run_pipeline()
-
-

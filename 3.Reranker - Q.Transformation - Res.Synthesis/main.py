@@ -9,7 +9,9 @@ from llama_index.embeddings.openai import OpenAIEmbedding
 from llama_index.vector_stores.pinecone import PineconeVectorStore
 from llama_index.core.response_synthesizers import ResponseMode
 from llama_index.postprocessor.cohere_rerank import CohereRerank
-from llama_index.core.indices.query.query_transform.base import StepDecomposeQueryTransform
+from llama_index.core.indices.query.query_transform.base import (
+    StepDecomposeQueryTransform,
+)
 
 openai.api_key = os.environ.get("OPENAI_API_KEY")
 cohere_api_key = os.environ.get("COHERE_API_KEY")
@@ -18,12 +20,13 @@ pinecone_api_key = os.environ.get("PINECONE_API_KEY")
 MODEL = "gpt-4-0125-preview"
 EMBEDDING = "text-embedding-3-large"
 
+
 @cl.cache
 def load_context():
     Settings.llm = OpenAI(
         temperature=0.1, model=MODEL, max_tokens=128000, streaming=True
     )
-    Settings.embed_model = OpenAIEmbedding(model=MODEL, embed_batch_size=1)
+    Settings.embed_model = OpenAIEmbedding(model=EMBEDDING, embed_batch_size=1)
     Settings.num_output = 1024
     Settings.context_window = 128000
     pc = Pinecone(api_key=pinecone_api_key)
