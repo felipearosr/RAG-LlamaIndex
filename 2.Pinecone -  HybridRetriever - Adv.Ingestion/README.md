@@ -87,24 +87,29 @@ from llama_index.vector_stores.pinecone import PineconeVectorStore
 
 pinecone_api_key = os.environ.get("PINECONE_API_KEY")
 pc = Pinecone(api_key=pinecone_api_key)
-"""
-# This part of code is commented as it must be used only the first time you run the
-# ingest script. You can also create the index manually in the pinecone dashboard.
-# Make sure you set the dimensions and metrics correctly.
 
-pc.create_index(
-    name="rag-index",
-    dimension=3072,
-    metric="dotproduct",
-    spec=PodSpec(environment="gcp-starter"),
-)
-"""
-pinecone_index = pc.Index("rag-index")
-vector_store = PineconeVectorStore(
-    pinecone_index=pinecone_index,
-    add_sparse_vector=True,
-)
+def get_pinecone_index(pc, index_name):
+    pinecone_index = pc.Index(index_name)
+    return pinecone_index
+
+
+def get_pinecone_vector_store(pinecone_index):
+    vector_store = PineconeVectorStore(
+        pinecone_index=pinecone_index,
+        add_sparse_vector=True,
+    )
+    return vector_store
 ```
+Use `--gen` flag to generate a pinecone pod if you haven't created one already.
+`ingest.py --gen`
+def create_pinecone_pod(pc, index_name):
+    print("Creating pinecone pod")
+    pc.create_index(
+        name=index_name,
+        dimension=3072,
+        metric="dotproduct",
+        spec=PodSpec(environment="gcp-starter"),
+    )
 
 ## Hybrid Retriever
 
