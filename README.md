@@ -1,4 +1,4 @@
-# GPT Documents Chatbot Enhancement Project
+# RAG workflow. From basic to advanced.
 
 This project focuses on enhancing the GPT Documents chatbot by introducing several innovative features across different stages of development, aimed at improving user interaction, search accuracy, and response quality. 
 
@@ -52,3 +52,4 @@ The order might change, and points might be added.
 - [ ] Trying out GPT as a reranker and comparing it with others
 - [ ] Adding Mistral and Llama examples
 - [ ] Adding jupyter files to each subproject.
+- [ ] Intent Detection, using 3.5T for some easy tasks.
