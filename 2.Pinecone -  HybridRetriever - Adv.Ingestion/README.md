@@ -142,22 +142,9 @@ Advanced ingestion involves specialized methods to optimize documents for better
 
 1. **Unstructured**: Applied for all document types except PDFs, enhancing data extraction and structuring to improve LLM readability. Explore various connectors from Llama Index for optimal results. More details [here](https://github.com/Unstructured-IO/unstructured).
 
-2. **LLM Sherpa**: Specifically for processing PDFs, transforming them into a more LLM-friendly format. Check it out [here](https://github.com/nlmatics/llmsherpa).
+2. **Llama Parse**: Specifically for processing PDFs, transforming them into a more LLM-friendly format. Check it out [here](https://github.com/run-llama/llama_parse).
 
 3. **Metadata Enhancement**: We're incorporating metadata into the documents for enriched context and searchability. You have the option to exclude them as needed. However, be mindful that each piece of metadata incurs a processing cost by the LLM due to the additional analysis required.
-
-LLM Sherpa includes features like:
-
-- Sections and subsections along with their levels.
-- Paragraphs - combines lines.
-- Links between sections and paragraphs.
-- Tables along with the section the tables are found in.
-- Lists and nested lists.
-- Join content spread across pages.
-- Removal of repeating headers and footers.
-- Watermark removal.
-
-These methods ensure documents are more accessible and interpretable for LLMs, enhancing information retrieval efficiency.
 
 ### How do we implement it?
 
@@ -165,33 +152,29 @@ These methods ensure documents are more accessible and interpretable for LLMs, e
 ```python
 UnstructuredReader = download_loader("UnstructuredReader")
 
-directory = "./data/"
-
-directory_reader = SimpleDirectoryReader(
-   input_dir=directory,
-   file_extractor={
-      ".html": UnstructuredReader(),
-      ".txt": UnstructuredReader()
-   },
+file_extractor = {
+    # ...
+    ".html": UnstructuredReader(),
+       ".txt": UnstructuredReader(),
+}
+director_reader = SimpleDirectoryReader(
+        input_dir=input_dir, file_extractor=file_extractor
 )
+documents = director_reader.load_data(show_progress=True)
 ```
 
-`llm sherpa`
+`llama parse`
 ```python
-documents = directory_reader.load_data(show_progress=True)
+llama_parser = LlamaParse(api_key=llama_parse_api_key, result_type="markdown", verbose=True)
 
-llmsherpa_api_url = "https://readers.llmsherpa.com/api/document/developer/parseDocument?renderFormat=all"
-pdf_loader = SmartPDFLoader(llmsherpa_api_url=llmsherpa_api_url)
-
-# List all files in the folder
-pdf_files = [f for f in os.listdir(directory) if f.lower().endswith(".pdf")]
-
-# Load each PDF document and append it to the documents list
-for pdf_file in pdf_files:
-   pdf_path = os.path.join(directory, pdf_file)
-   pdf_document = pdf_loader.load_data(pdf_path)
-   documents += pdf_document
-
+file_extractor = {
+    ".pdf": llama_parser,
+    # ...
+}
+director_reader = SimpleDirectoryReader(
+        input_dir=input_dir, file_extractor=file_extractor
+)
+documents = director_reader.load_data(show_progress=True)
 ```
 
 `metadata enhancement`
