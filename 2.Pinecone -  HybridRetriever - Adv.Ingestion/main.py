@@ -24,7 +24,7 @@ def load_context():
     Settings.num_output = 1024
     Settings.context_window = 128000
     pc = Pinecone(api_key=pinecone_api_key)
-    pinecone_index = pc.Index("pinecone-index")
+    pinecone_index = pc.Index("rag-index")
     vector_store = PineconeVectorStore(
         pinecone_index=pinecone_index,
     )

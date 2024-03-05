@@ -17,8 +17,8 @@ openai.api_key = os.environ.get("OPENAI_API_KEY")
 cohere_api_key = os.environ.get("COHERE_API_KEY")
 pinecone_api_key = os.environ.get("PINECONE_API_KEY")
 
-MODEL = "gpt-4-0125-preview"
-EMBEDDING = "text-embedding-3-large"
+MODEL = os.getenv("MODEL", "gpt-4-0125-preview")
+EMBEDDING = os.getenv("EMBEDDING", "text-embedding-3-large")
 
 
 @cl.cache
@@ -30,7 +30,7 @@ def load_context():
     Settings.num_output = 1024
     Settings.context_window = 128000
     pc = Pinecone(api_key=pinecone_api_key)
-    pinecone_index = pc.Index("pinecone-index")
+    pinecone_index = pc.Index("rag-index")
     vector_store = PineconeVectorStore(
         pinecone_index=pinecone_index,
     )
