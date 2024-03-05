@@ -13,9 +13,9 @@ from llama_index.core.ingestion import IngestionPipeline
 from llama_index.vector_stores.pinecone import PineconeVectorStore
 from llama_index.core.extractors import (
     TitleExtractor,
-    QuestionsAnsweredExtractor,
-    SummaryExtractor,
-    KeywordExtractor,
+    #QuestionsAnsweredExtractor,
+    #SummaryExtractor,
+    #KeywordExtractor,
 )
 from llama_index.core.node_parser import SentenceSplitter
 from llama_parse import LlamaParse
