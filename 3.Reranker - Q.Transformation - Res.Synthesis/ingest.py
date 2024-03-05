@@ -6,7 +6,7 @@ import argparse
 from dotenv import load_dotenv
 from pinecone import Pinecone, PodSpec
 
-from llama_index.core import SimpleDirectoryReader, download_loader
+from llama_index.core import SimpleDirectoryReader
 from llama_index.llms.openai import OpenAI
 from llama_index.readers.file import UnstructuredReader
 from llama_index.core.ingestion import IngestionPipeline
