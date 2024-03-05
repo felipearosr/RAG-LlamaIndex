@@ -43,11 +43,11 @@ The order might change, and points might be added.
 - [ ] Pinecone Serverless
 - [x] Implementing HybridSearch Retriever
 - [x] Implementing better ingestion 
-- [ ] Add evaluation
-- [ ] Create set of documents and questions for evaluation
+- [x] Add evaluation
+- [x] Create set of documents and questions for evaluation
 - [ ] Trying out agents
 - [ ] Prompting
-- [ ] Trying out Query Transformations 
+- [x] Trying out Query Transformations 
 - [ ] Implementing a llm router
 - [ ] Trying out GPT as a reranker and comparing it with others
 - [ ] Adding Mistral and Llama examples
