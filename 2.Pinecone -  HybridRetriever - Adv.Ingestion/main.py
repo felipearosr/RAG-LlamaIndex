@@ -11,8 +11,8 @@ from llama_index.vector_stores.pinecone import PineconeVectorStore
 openai.api_key = os.environ.get("OPENAI_API_KEY")
 pinecone_api_key = os.environ.get("PINECONE_API_KEY")
 
-MODEL = "gpt-4-0125-preview"
-EMBEDDING = "text-embedding-3-large"
+MODEL = os.getenv("MODEL", "gpt-4-0125-preview")
+EMBEDDING = os.getenv("EMBEDDING", "text-embedding-3-large")
 
 
 @cl.cache
