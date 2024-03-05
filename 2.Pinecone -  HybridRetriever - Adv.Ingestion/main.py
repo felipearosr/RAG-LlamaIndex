@@ -18,7 +18,7 @@ EMBEDDING = "text-embedding-3-large"
 @cl.cache
 def load_context():
     Settings.llm = OpenAI(
-        temperature=0.1, model=MODEL, max_tokens=128000, streaming=True
+        temperature=0.1, model=MODEL, streaming=True
     )
     Settings.embed_model = OpenAIEmbedding(model=EMBEDDING, embed_batch_size=1)
     Settings.num_output = 1024
