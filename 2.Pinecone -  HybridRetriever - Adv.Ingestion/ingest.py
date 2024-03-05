@@ -8,8 +8,10 @@ from pinecone import Pinecone, PodSpec
 
 from llama_index.core import SimpleDirectoryReader, download_loader
 from llama_index.llms.openai import OpenAI
-from llama_index.embeddings.openai import OpenAIEmbedding
+from llama_index.readers.file import UnstructuredReader
 from llama_index.core.ingestion import IngestionPipeline
+from llama_index.core.node_parser import SentenceSplitter
+from llama_index.embeddings.openai import OpenAIEmbedding
 from llama_index.vector_stores.pinecone import PineconeVectorStore
 from llama_index.core.extractors import (
     TitleExtractor,
@@ -17,7 +19,6 @@ from llama_index.core.extractors import (
     #SummaryExtractor,
     #KeywordExtractor,
 )
-from llama_index.core.node_parser import SentenceSplitter
 from llama_parse import LlamaParse
 
 load_dotenv()
@@ -54,8 +55,6 @@ def create_pinecone_pod(pc, index_name):
 
 def get_documents(input_dir):
     llama_parser = LlamaParse(api_key=llama_parse_api_key, result_type="markdown", verbose=True)
-
-    UnstructuredReader = download_loader("UnstructuredReader")
 
     file_extractor = {
         ".pdf": llama_parser,
