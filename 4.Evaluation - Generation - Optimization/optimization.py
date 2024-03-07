@@ -14,7 +14,7 @@ from llama_index.core.evaluation import (
     BatchEvalRunner,
 )
 
-#from llama_index.llms.openai import OpenAI
+# from llama_index.llms.openai import OpenAI
 from llama_index.readers.file import PDFReader
 from llama_index.core.evaluation import QueryResponseDataset
 from llama_index.core.node_parser import SimpleNodeParser
@@ -32,9 +32,7 @@ docs = [Document(text=doc_text)]
 ######################
 ###### Chnage this to work with a datageneration form Llabelleddata
 ######################
-eval_dataset = QueryResponseDataset.from_json(
-    "data/llama2_eval_qr_dataset.json"
-)
+eval_dataset = QueryResponseDataset.from_json("data/llama2_eval_qr_dataset.json")
 eval_qs = eval_dataset.questions
 ref_response_strs = [r for (_, r) in eval_dataset.qr_pairs]
 
@@ -53,9 +51,7 @@ def _build_index(chunk_size, docs):
         index.storage_context.persist(index_out_path)
     else:
         # rebuild storage context
-        storage_context = StorageContext.from_defaults(
-            persist_dir=index_out_path
-        )
+        storage_context = StorageContext.from_defaults(persist_dir=index_out_path)
         # load index
         index = load_index_from_storage(
             storage_context,
@@ -71,6 +67,7 @@ def _get_eval_batch_runner():
 
     return eval_batch_runner
 
+
 def objective_function(params_dict):
     chunk_size = params_dict["chunk_size"]
     docs = params_dict["docs"]
@@ -85,9 +82,7 @@ def objective_function(params_dict):
     query_engine = index.as_query_engine(similarity_top_k=top_k)
 
     # get predicted responses
-    pred_response_objs = get_responses(
-        eval_qs, query_engine, show_progress=True
-    )
+    pred_response_objs = get_responses(eval_qs, query_engine, show_progress=True)
 
     # run evaluator
     # NOTE: can uncomment other evaluators
@@ -97,18 +92,13 @@ def objective_function(params_dict):
     )
 
     # get semantic similarity metric
-    mean_score = np.array(
-        [r.score for r in eval_results["semantic_similarity"]]
-    ).mean()
+    mean_score = np.array([r.score for r in eval_results["semantic_similarity"]]).mean()
 
     return RunResult(score=mean_score, params=params_dict)
 
 
 def param_tuner():
-    param_dict = {
-        "chunk_size": [256, 512, 1024],
-        "top_k": [1, 2, 5]
-    }
+    param_dict = {"chunk_size": [256, 512, 1024], "top_k": [1, 2, 5]}
     fixed_param_dict = {
         "docs": docs,
         "eval_qs": eval_qs[:10],
@@ -134,9 +124,11 @@ def print_results(results):
     print(f"Top-k: {best_top_k}")
     print(f"Chunk size: {best_chunk_size}")
 
+
 def main():
     results = param_tuner()
     print_results(results)
+
 
 if __name__ == "__main__":
     main()
