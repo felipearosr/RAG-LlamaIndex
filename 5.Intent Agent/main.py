@@ -92,7 +92,10 @@ async def router_query_engine():
         query_engine=vector_query_engine,
         name="Vector Query Engine",
         description=(
-            "Useful for retrieving specific context about SURA insurance or anything related to life insurance, home insurance, car or vehicle insurance and work insurance, or anything related to the field of insurance."
+            "Useful for retrieving specific context about Paul Graham or anything related "
+            "to startup incubation, essay writing, programming languages, venture funding, "
+            "Y Combinator, Lisp programming, or anything related to the field of technology "
+            "entrepreneurship and innovation."
         ),
     )
     query_engine = RouterQueryEngine(
@@ -102,7 +105,6 @@ async def router_query_engine():
             vector_tool,
         ],
     )
-    print(MODEL)
     print("Router query engine created.")
     print(query_engine)
     return query_engine
