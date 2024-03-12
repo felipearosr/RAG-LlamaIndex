@@ -1,7 +1,6 @@
 # Agent for intent detection
 
-[!IMPORTANT]
-This code is untested.
+[!IMPORTANT] This code is untested.
 
 In this module, we introduce an agent designed to understand and interpret user intentions effectively. The primary goal here is to redirect queries to a more compact and cost-efficient language model. By default, we employ gpt3.5-turbo for this task, due to its efficiency and performance. However, the implementation is modular, allowing for easy substitution with your preferred large language model (LLM).
 
