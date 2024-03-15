@@ -9,8 +9,9 @@ from llama_index.core.llama_dataset import LabelledRagDataset
 from main import load_query_engine, load_index
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
-Settings.model = OpenAI(model=os.getenv("MODEL", "gpt-4-0125-preview"))
-
+model = os.getenv("MODEL", "gpt-4-0125-preview")
+print(f"model = {model}")
+Settings.model = OpenAI(model=model)
 
 async def evaluate():
     rag_dataset = LabelledRagDataset.from_json("./data/rag_dataset.json")
@@ -36,7 +37,7 @@ async def evaluate():
         sleep_time_in_seconds=1,  # seconds to sleep before making an api call
     )
     print("Benchmarking complete")
-    benchmark_df.to_csv("benchmark.csv", index=False)
+    benchmark_df.to_csv("benchmark.csv", index=True)
 
 
 if __name__ == "__main__":

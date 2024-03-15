@@ -88,14 +88,14 @@ This structure allows for the comprehensive training and evaluation of RAG syste
 The implementation is super easy thanks to LlamaIndex.
 
 ```python
-   dataset_generator = RagDatasetGenerator.from_documents(
-      documents,
-      llm=llm,
-      num_questions_per_chunk=1,
-      show_progress=True,
-   )
+dataset_generator = RagDatasetGenerator.from_documents(
+   documents,
+   llm=llm,
+   num_questions_per_chunk=1,
+   show_progress=True,
+)
 
-   rag_dataset = dataset_generator.generate_dataset_from_nodes()
+rag_dataset = dataset_generator.generate_dataset_from_nodes()
 ```
 
 ## Testing
