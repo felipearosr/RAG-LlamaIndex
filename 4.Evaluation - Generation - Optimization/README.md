@@ -54,7 +54,8 @@ Feel free to explore the functionalities and contribute to the development of th
 ```
 
 ## Tested
-
+|a|   |b|
+|-----------|------------------------------------------------|------------|
 - [x] Generation.    <span style="float: right;">March 14, 2024 </span>   
 - [ ] Evaluation.    <span style="float: right;">Untested </span>
 - [ ] Optimization.  <span style="float: right;">Untested </span>
