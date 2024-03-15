@@ -1,7 +1,7 @@
 # Evaluation, generation and optimization
 
 > [!IMPORTANT] 
-> This code is untested.
+> Evaluation and optimization is untested and likely unfinished.
 
 ## Table of Contents
 
