@@ -8,7 +8,7 @@
 1. [Installation Instructions](#installation-instructions)
 2. [Usage](#usage)
 3. [Generation](#generation)
-
+4. [Evaluation](#evaluation)
 10. [Testing](#tested)
 
 ## Installation Instructions
@@ -98,9 +98,34 @@ dataset_generator = RagDatasetGenerator.from_documents(
 rag_dataset = dataset_generator.generate_dataset_from_nodes()
 ```
 
+## Evaluation
+
+### Why is evaluation important?
+
+Evaluation is crucial for measuring the performance and guiding the improvement of Retriever-Augmented Generation (RAG) systems. It ensures that these systems produce accurate, relevant, and contextually appropriate responses. By evaluating various metrics, we can identify areas of strength and weakness, benchmark against other systems, and refine our approach for better outcomes.
+
+We assess the following metrics:
+
+- **Mean Correctness Score**: Accuracy of the generated answers.
+- **Mean Relevancy Score**: Relevance of the retrieved documents to the query.
+- **Mean Faithfulness Score**: Adherence of the responses to the retrieved information.
+- **Mean Context Similarity Score**: Similarity of the responses to the query and document context.
+
+These metrics collectively help ensure the RAG system meets quality standards and user needs.
+
+### Notes
+
+In the process of adjusting my pipeline within `main.py`, several modifications were necessary. Notably, due to the limitations of using a trial API key for Cohere, I was unable to perform evaluations as initially intended. This constraint has influenced the functionality of the RAG, rendering my current results less applicable. If you have access to a full API key and can conduct the evaluation, I encourage you to share your findings through a pull request.
+
+Additionally, I disabled streaming functionality to accommodate these changes. This decision may affect the overall operation and efficiency of the system.
+
+I acknowledge that my current implementation might not be optimal. I am planning to revisit and refine it to enhance performance and reliability. Your feedback and contributions are highly welcomed to help improve this project.
+
+---
+
 ## Testing
 | Tested       | Function        | Last Time Tested | Notes                      |
 |:-------------|:----------------|:-----------------|:---------------------------|
 | ✅           | Generation      | 2023-03-14       |                            |
-| ✅           | Evaluation      | 2023-03-14       | Had to change some things in main.py, this is noted in the explanation above.                           |
+| ✅           | Evaluation      | 2023-03-14       | Had to change some things in main.py, this is the [notes](#notes) above.                           |
 | ❌           | Optimization    | Untested         |                            |
