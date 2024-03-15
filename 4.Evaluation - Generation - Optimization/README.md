@@ -102,5 +102,5 @@ rag_dataset = dataset_generator.generate_dataset_from_nodes()
 | Tested       | Function        | Last Time Tested | Notes                      |
 |:-------------|:----------------|:-----------------|:---------------------------|
 | ✅           | Generation      | 2023-03-14       |                            |
-| ❌           | Evaluation      | Untested         |                            |
+| ✅           | Evaluation      | 2023-03-14       | Had to change some things in main.py, this is noted in the explanation above.                           |
 | ❌           | Optimization    | Untested         |                            |
