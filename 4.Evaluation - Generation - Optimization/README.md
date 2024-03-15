@@ -54,15 +54,8 @@ Feel free to explore the functionalities and contribute to the development of th
 ```
 
 ## Tested\
-| Tested      | Function         | Last Time Tested |
-|-------------|------------------|------------------|
-| ✅ | Generation  | `2023-03-14`     |
-| ❌ | Evaluation |      |
-| ❌ | Optimization  |      |
-
-
-
-
-- [x] Generation.    <span style="float: right;">March 14, 2024 </span>   
-- [ ] Evaluation.    <span style="float: right;">Untested </span>
-- [ ] Optimization.  <span style="float: right;">Untested </span>
+| Tested       | Function        | Last Time Tested |
+|:-------------|:----------------|:-----------------|
+| ✅           | Generation      | 2023-03-14       |
+| ❌           | Evaluation      | Untested         |
+| ❌           | Optimization    | Untested         |
