@@ -7,6 +7,7 @@
 
 1. [Installation Instructions](#installation-instructions)
 2. [Usage](#usage)
+3. [Generation](#generation)
 
 ## Installation Instructions
 
@@ -38,3 +39,22 @@ chainlit run -w main.py
 ```
 
 Feel free to explore the functionalities and contribute to the development of this project. Your feedback and contributions are highly appreciated!
+
+## Generation
+
+### Why is it important?
+
+### What are we generating?
+
+### How do we implement it?
+
+```python
+
+
+```
+
+## Tested
+
+- [x] Generation.    <span style="float: right;">March 14, 2024 </span>   
+- [ ] Evaluation.    <span style="float: right;">Untested </span>
+- [ ] Optimization.  <span style="float: right;">Untested </span>
