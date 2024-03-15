@@ -54,14 +54,15 @@ Feel free to explore the functionalities and contribute to the development of th
 ```
 
 ## Tested\
-<table>
-<tr>
-<td align="left">Left text</td>
-<td align="right">Right text</td>
-</tr>
-</table>
-|a|   |b|
-|-----------|------------------------------------------------|------------|
+| Tested      | Function         | Last Time Tested |
+|-------------|------------------|------------------|
+| ✅ (or ❌)   | `exampleFunc()`  | `2023-03-14`     |
+| [x]   | `exampleFunc()`  | `2023-03-14`     |
+| ✅ (or ❌)   | `exampleFunc()`  | `2023-03-14`     |
+
+
+
+
 - [x] Generation.    <span style="float: right;">March 14, 2024 </span>   
 - [ ] Evaluation.    <span style="float: right;">Untested </span>
 - [ ] Optimization.  <span style="float: right;">Untested </span>
