@@ -12,6 +12,10 @@ This project focuses on enhancing the GPT Documents chatbot by introducing sever
 
 3. **Reranker, Query Transformations, and Response Synthesis**: Further enhancements incorporate the Cohere reranker for semantic document reordering, multi-step query transformations for detailed query processing, and response synthesis methods for generating more accurate and comprehensive answers.
 
+4. **Evaluation - Generation - Optimization:** This stage involves the systematic generation and evaluation of the RAG in the following metrics; correctness, relevancy, faithfulness and context similarity.
+
+5. **Intent Detection Agent:** Integration of an agent for effective user intent detection, streamlining the query process and enabling more efficient and precise information retrieval by redirecting queries to a more compact and cost-efficient language model.
+
 ## Key Features and Improvements:
 
 - **Real-time Interaction**: Implements streaming to deliver answers swiftly, enhancing user experience.
@@ -33,7 +37,10 @@ This project focuses on enhancing the GPT Documents chatbot by introducing sever
 - **Dynamic Response Generation**: Adopts multiple response synthesis methods, tailoring the chatbot's replies to user needs and ensuring comprehensive and detailed answers.
 
 This project represents a comprehensive approach to developing a sophisticated chatbot capable of real-time interaction, contextual understanding, and accurate information retrieval, all while maintaining transparency and user trust.
+
+
 ## Roadmap
+
 The order might change, and points might be added.
 
 - [x] Chat Streaming
