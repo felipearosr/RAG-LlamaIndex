@@ -10,6 +10,7 @@ openai.api_key = os.environ.get("OPENAI_API_KEY")
 MODEL = os.getenv("MODEL", "gpt-4-0125-preview")
 print(f"model = {MODEL}")
 
+
 def get_documents(input_dir):
     documents = SimpleDirectoryReader(input_dir).load_data(show_progress=True)
     return documents
@@ -27,6 +28,7 @@ def generate_dataset(documents):
 
     rag_dataset = dataset_generator.generate_dataset_from_nodes()
     return rag_dataset
+
 
 def main():
     input_dir = "./data/source_files/"
