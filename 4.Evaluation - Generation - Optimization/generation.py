@@ -17,7 +17,6 @@ def get_documents(input_dir):
 
 def generate_dataset(documents):
     llm = OpenAI(model=MODEL, temperature=0.1)
-    print(f"model = {llm.model}")
 
     dataset_generator = RagDatasetGenerator.from_documents(
         documents,
