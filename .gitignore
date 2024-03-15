@@ -9,3 +9,5 @@
 **/output/*
 !**/output/
 *questions.json
+*_evaluations.json
+*benchmark.csv
