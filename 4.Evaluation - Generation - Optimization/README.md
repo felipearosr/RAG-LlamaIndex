@@ -53,7 +53,13 @@ Feel free to explore the functionalities and contribute to the development of th
 
 ```
 
-## Tested
+## Tested\
+<table>
+<tr>
+<td align="left">Left text</td>
+<td align="right">Right text</td>
+</tr>
+</table>
 |a|   |b|
 |-----------|------------------------------------------------|------------|
 - [x] Generation.    <span style="float: right;">March 14, 2024 </span>   
