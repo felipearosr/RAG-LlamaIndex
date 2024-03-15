@@ -56,9 +56,9 @@ Feel free to explore the functionalities and contribute to the development of th
 ## Tested\
 | Tested      | Function         | Last Time Tested |
 |-------------|------------------|------------------|
-| ✅ (or ❌)   | `exampleFunc()`  | `2023-03-14`     |
-| [x]   | `exampleFunc()`  | `2023-03-14`     |
-| ✅ (or ❌)   | `exampleFunc()`  | `2023-03-14`     |
+| ✅ | Generation  | `2023-03-14`     |
+| ❌ | Evaluation |      |
+| ❌ | Optimization  |      |
 
 
 
