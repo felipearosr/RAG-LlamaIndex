@@ -140,9 +140,7 @@ Sources refer to the documents or materials returned by the retrieval system, wh
 This is a basic implementation of sources, you can also separate them by file types, using the metadata of the source_nodes.
 
 ```python
-@cl.on_message
-async def main(message: cl.Message):
-    # rest of your code
+async def set_sources(response, response_message):
     label_list = []
     count = 1
 
