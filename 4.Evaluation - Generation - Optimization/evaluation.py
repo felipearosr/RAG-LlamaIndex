@@ -13,6 +13,7 @@ model = os.getenv("MODEL", "gpt-4-0125-preview")
 print(f"model = {model}")
 Settings.model = OpenAI(model=model)
 
+
 async def evaluate():
     rag_dataset = LabelledRagDataset.from_json("./data/rag_dataset.json")
     print("Rag dataset loaded")
