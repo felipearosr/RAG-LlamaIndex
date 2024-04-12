@@ -8,7 +8,7 @@ from llama_index.llms.openai import OpenAI
 from llama_index.embeddings.openai import OpenAIEmbedding
 from llama_index.vector_stores.pinecone import PineconeVectorStore
 from llama_index.core.response_synthesizers import ResponseMode
-from llama_index.postprocessor.cohere_rerank import CohereRerank
+# from llama_index.postprocessor.cohere_rerank import CohereRerank
 from llama_index.core.indices.query.query_transform.base import (
     StepDecomposeQueryTransform,
 )
@@ -24,7 +24,8 @@ EMBEDDING = os.getenv("EMBEDDING", "text-embedding-3-large")
 @cl.cache
 def load_index():
     Settings.llm = OpenAI(
-        temperature=0.1, model=MODEL, #streaming=True
+        temperature=0.1,
+        model=MODEL,  # streaming=True
     )
     Settings.embed_model = OpenAIEmbedding(model=EMBEDDING, embed_batch_size=1)
     Settings.num_output = 1024
@@ -43,13 +44,13 @@ def load_index():
 
 @cl.cache
 def load_query_engine(index):
-    #reranker = CohereRerank(api_key=cohere_api_key, top_n=3)
+    # reranker = CohereRerank(api_key=cohere_api_key, top_n=3)
     step_decompose_transform = StepDecomposeQueryTransform(llm=MODEL, verbose=True)
 
     query_engine = index.as_query_engine(
-        #streaming=True,
+        # streaming=True,
         similarity_top_k=6,
-        #node_postprocessors=[reranker], # Reranker would require a non Trial key for evaluation.
+        # node_postprocessors=[reranker], # Reranker would require a non Trial key for evaluation.
         vector_store_query_mode="hybrid",
         query_transform=step_decompose_transform,
         response_synthesizer_mode=ResponseMode.REFINE,
