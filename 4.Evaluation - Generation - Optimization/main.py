@@ -8,7 +8,7 @@ from llama_index.llms.openai import OpenAI
 from llama_index.embeddings.openai import OpenAIEmbedding
 from llama_index.vector_stores.pinecone import PineconeVectorStore
 from llama_index.core.response_synthesizers import ResponseMode
-from llama_index.postprocessor.cohere_rerank import CohereRerank
+# from llama_index.postprocessor.cohere_rerank import CohereRerank
 from llama_index.core.indices.query.query_transform.base import (
     StepDecomposeQueryTransform,
 )
