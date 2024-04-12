@@ -32,7 +32,9 @@ async def start():
     Settings.callback_manager = CallbackManager([cl.LlamaIndexCallbackHandler()])
 
     service_context = ServiceContext.from_defaults()
-    query_engine = index.as_query_engine(streaming=True, similarity_top_k=2, service_context=service_context)
+    query_engine = index.as_query_engine(
+        streaming=True, similarity_top_k=2, service_context=service_context
+    )
     cl.user_session.set("query_engine", query_engine)
 
     message_history = []
