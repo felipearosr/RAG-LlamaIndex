@@ -51,6 +51,7 @@ async def start():
         author="Assistant", content="Hello! Im an AI assistant. How may I help you?"
     ).send()
 
+
 async def set_sources(response, response_message):
     label_list = []
     count = 1
@@ -69,6 +70,7 @@ async def set_sources(response, response_message):
         count += 1
     response_message.content += "\n\nSources: " + ", ".join(label_list)
     await response_message.update()
+
 
 @cl.on_message
 async def main(message: cl.Message):
