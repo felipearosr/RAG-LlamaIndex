@@ -51,6 +51,24 @@ async def start():
         author="Assistant", content="Hello! Im an AI assistant. How may I help you?"
     ).send()
 
+async def set_sources(response, response_message):
+    label_list = []
+    count = 1
+    for sr in response.source_nodes:
+        elements = [
+            cl.Text(
+                name="S" + str(count),
+                content=f"{sr.node.text}",
+                display="side",
+                size="small",
+            )
+        ]
+        response_message.elements = elements
+        label_list.append("S" + str(count))
+        await response_message.update()
+        count += 1
+    response_message.content += "\n\nSources: " + ", ".join(label_list)
+    await response_message.update()
 
 @cl.on_message
 async def main(message: cl.Message):
@@ -79,21 +97,5 @@ async def main(message: cl.Message):
     message_history = message_history[-4:]
     cl.user_session.set("message_history", message_history)
 
-    label_list = []
-    count = 1
-
-    for sr in response.source_nodes:
-        elements = [
-            cl.Text(
-                name="S" + str(count),
-                content=f"{sr.node.text}",
-                display="side",
-                size="small",
-            )
-        ]
-        response_message.elements = elements
-        label_list.append("S" + str(count))
-        await response_message.update()
-        count += 1
-    response_message.content += "\n\nSources: " + ", ".join(label_list)
-    await response_message.update()
+    if response.source_nodes:
+        await set_sources(response, response_message)
