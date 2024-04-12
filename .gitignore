@@ -1,4 +1,5 @@
 *.env
+*requirements_test.txt
 *__pycache__
 **/storage/
 *.gitattributes
