@@ -13,9 +13,9 @@ from llama_index.core.ingestion import IngestionPipeline
 from llama_index.vector_stores.pinecone import PineconeVectorStore
 from llama_index.core.extractors import (
     TitleExtractor,
-    #QuestionsAnsweredExtractor,
-    #SummaryExtractor,
-    #KeywordExtractor,
+    # QuestionsAnsweredExtractor,
+    # SummaryExtractor,
+    # KeywordExtractor,
 )
 from llama_index.core.node_parser import SentenceSplitter
 from llama_parse import LlamaParse
@@ -53,7 +53,9 @@ def create_pinecone_pod(pc, index_name):
 
 
 def get_documents(input_dir):
-    llama_parser = LlamaParse(api_key=llama_parse_api_key, result_type="markdown", verbose=True)
+    llama_parser = LlamaParse(
+        api_key=llama_parse_api_key, result_type="markdown", verbose=True
+    )
 
     UnstructuredReader = download_loader("UnstructuredReader")
 
@@ -75,20 +77,19 @@ def run_pipeline(documents, vector_store, llm, num_workers):
     pipeline = IngestionPipeline(
         transformations=[
             SentenceSplitter(chunk_size=512, chunk_overlap=126),
-
             TitleExtractor(llm=llm, num_workers=num_workers),
-            #QuestionsAnsweredExtractor(questions=3, llm=llm, num_workers=num_workers),
-            #SummaryExtractor(
+            # QuestionsAnsweredExtractor(questions=3, llm=llm, num_workers=num_workers),
+            # SummaryExtractor(
             #    summaries=["prev", "self"], llm=llm, num_workers=num_workers
-            #),
-            #KeywordExtractor(keywords=5, llm=llm, num_workers=num_workers),
+            # ),
+            # KeywordExtractor(keywords=5, llm=llm, num_workers=num_workers),
             OpenAIEmbedding(model=EMBEDDING),
         ],
         vector_store=vector_store,
     )
-    for doc in documents: # Small patch to remove last_accessed_date from metadata
-        k=vars(doc)
-        del k['metadata']['last_accessed_date']
+    for doc in documents:  # Small patch to remove last_accessed_date from metadata
+        k = vars(doc)
+        del k["metadata"]["last_accessed_date"]
     pipeline.run(documents=documents, show_progress=True, num_workers=num_workers)
 
 
@@ -117,4 +118,4 @@ async def main():
 
 
 if __name__ == "__main__":
-   asyncio.run(main())
+    asyncio.run(main())
