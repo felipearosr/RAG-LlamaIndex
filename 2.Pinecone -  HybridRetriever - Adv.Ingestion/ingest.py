@@ -1,14 +1,13 @@
 import os
 import openai
-import asyncio
 import argparse
 
 from dotenv import load_dotenv
-from pinecone import Pinecone, PodSpec
+from pinecone import Pinecone, ServerlessSpec
 
+from llama_parse import LlamaParse
 from llama_index.core import SimpleDirectoryReader
 from llama_index.llms.openai import OpenAI
-from llama_index.readers.file import UnstructuredReader
 from llama_index.core.ingestion import IngestionPipeline
 from llama_index.core.node_parser import SentenceSplitter
 from llama_index.embeddings.openai import OpenAIEmbedding
@@ -19,7 +18,6 @@ from llama_index.core.extractors import (
     # SummaryExtractor,
     # KeywordExtractor,
 )
-from llama_parse import LlamaParse
 
 load_dotenv()
 openai.api_key = os.environ.get("OPENAI_API_KEY")
@@ -43,13 +41,13 @@ def get_pinecone_vector_store(pinecone_index):
     return vector_store
 
 
-def create_pinecone_pod(pc, index_name):
-    print("Creating pinecone pod")
+def create_pinecone_serverless_index(pc, index_name):
+    print("Creating pinecone serverless index")
     pc.create_index(
         name=index_name,
         dimension=3072,
         metric="dotproduct",
-        spec=PodSpec(environment="gcp-starter"),
+        spec=ServerlessSpec(cloud="aws", region="us-east-1"),
     )
 
 
@@ -60,8 +58,6 @@ def get_documents(input_dir):
 
     file_extractor = {
         ".pdf": llama_parser,
-        ".html": UnstructuredReader(),
-        ".txt": UnstructuredReader(),
     }
     print("Reading directory")
     director_reader = SimpleDirectoryReader(
@@ -86,15 +82,11 @@ def run_pipeline(documents, vector_store, llm, num_workers):
         ],
         vector_store=vector_store,
     )
-    for doc in documents:  # Small patch to remove last_accessed_date from metadata
-        k = vars(doc)
-        del k["metadata"]["last_accessed_date"]
     pipeline.run(documents=documents, show_progress=True, num_workers=num_workers)
 
 
-async def main():
-    print("Starting ingestion")
-    input_dir = "./data/source_files/"
+def main():
+    input_dir = "./data/"
     index_name = "rag-index"
     num_cores = os.cpu_count()
     num_workers = min(4, num_cores)
@@ -107,7 +99,7 @@ async def main():
     )
     args = parser.parse_args()
     if args.gen:
-        create_pinecone_pod(pc, index_name)
+        create_pinecone_serverless_index(pc, index_name)
     llm = OpenAI(temperature=0.1, model=MODEL, max_tokens=1024)
     pinecone_index = get_pinecone_index(pc, index_name)
     vector_store = get_pinecone_vector_store(pinecone_index)
@@ -117,4 +109,5 @@ async def main():
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    print("Starting ingestion")
+    main()
