@@ -1,5 +1,5 @@
 *.env
-*requirements_test.txt
+*requirements_plain.txt
 *__pycache__
 **/storage/
 *.gitattributes
